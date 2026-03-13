@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>버튜버 Live2D 작업 페이지</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #dedddb;
+      --page-card: #f5f0e6;
+      --panel-bg: #f8f4ec;
+      --panel-border: #d7ccb9;
+      --panel-shadow: rgba(96, 84, 67, 0.08);
+
+      --text-main: #2f2a25;
+      --text-sub: #74695f;
+      --text-soft: #8d8278;
+
+      --chip-bg: #efe7d8;
+      --chip-border: #d8cab2;
+
+      --box-bg: #fcfaf6;
+      --box-border: #e2d8c8;
+
+      --accent-brown: #7b6955;
+      --accent-gold: #d8c07d;
+      --accent-gold-deep: #b79d55;
+      --accent-rose: #cfaebc;
+      --accent-rose-deep: #a47b93;
+
+      --button-primary: #8b7967;
+      --button-primary-text: #fffdf8;
+      --button-secondary: #efe6d9;
+      --button-secondary-text: #5f554b;
+
+      --menu-card: #fbf8f2;
+      --menu-border: #e1d7c7;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 0 16px 60px;
+    }
+
+    .panel {
+      position: relative;
+      background: var(--panel-bg);
+      border: 1.5px solid var(--panel-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px var(--panel-shadow);
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+
+    .panel::before,
+    .panel::after {
+      content: "";
+      position: absolute;
+      top: -14px;
+      width: 28px;
+      height: 28px;
+      background: #f1e5d8;
+      border: 1.5px solid var(--panel-border);
+      border-bottom: none;
+      border-radius: 18px 18px 0 0;
+      transform: rotate(-35deg);
+    }
+
+    .panel::before { left: 22px; }
+
+    .panel::after {
+      right: 22px;
+      transform: scaleX(-1) rotate(-35deg);
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-brown);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .title {
+      margin: 0 0 10px;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      color: var(--text-sub);
+      font-size: 14px;
+    }
+
+    .sample-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--box-bg);
+      border: 1.5px solid var(--box-border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--text-main);
+    }
+
+    .poster-box,
+    .video-box,
+    .expression-box,
+    .collab-image-box {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px dashed #d7cab4;
+      background: linear-gradient(135deg, #ffffff, #f3ede2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+      font-weight: 700;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .poster-box { min-height: 240px; }
+    .video-box { min-height: 160px; margin-bottom: 12px; }
+    .expression-box { min-height: 68px; }
+
+    .collab-image-box {
+      min-height: 220px;
+      overflow: hidden;
+    }
+
+    .collab-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .notice-box {
+      border: 1.5px solid var(--box-border);
+      border-radius: 16px;
+      background: var(--box-bg);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .notice-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      font-weight: 800;
+      color: #5e5043;
+      border-bottom: 1px solid #eee5d7;
+      background: #f5efe5;
+    }
+
+    .notice-body {
+      padding: 14px;
+      color: var(--text-sub);
+      font-size: 14px;
+    }
+
+    .notice-body p,
+    .notice-body li {
+      margin: 0 0 8px;
+    }
+
+    .notice-body ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .process-step {
+      background: var(--box-bg);
+      border: 1.5px solid var(--box-border);
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 110px;
+      position: relative;
+    }
+
+    .process-step .num {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #fffdfa;
+      border: 1.5px solid #d8cab6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--accent-brown);
+      margin-bottom: 10px;
+    }
+
+    .process-step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .slot-box {
+      background: var(--box-bg);
+      border: 1.5px solid var(--box-border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .slot-status-wrap {
+      background: linear-gradient(180deg, #f7f1e8 0%, #f2ede5 100%);
+      border: 1.5px solid #d8cab8;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 10px 22px rgba(120, 96, 72, 0.06);
+    }
+
+    .slot-status-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .slot-status-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .slot-status-title .heart {
+      color: var(--accent-rose-deep);
+      font-size: 14px;
+    }
+
+    .slot-legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-sub);
+      flex-wrap: wrap;
+    }
+
+    .slot-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slot-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .slot-dot.closed {
+      background: var(--accent-rose-deep);
+    }
+
+    .slot-dot.open {
+      background: #f3e8b4;
+      border: 1px solid var(--accent-gold-deep);
+    }
+
+    .slot-status-grid {
+      display: grid;
+      grid-template-columns: 82px repeat(3, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .slot-month {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: #fffdf9;
+      border: 1.5px solid #d8cab8;
+      box-shadow: 0 4px 8px rgba(90, 60, 100, 0.05);
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .slot-pill {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      border: 1.5px solid;
+      box-shadow: 0 4px 10px rgba(90, 60, 100, 0.04);
+      white-space: nowrap;
+    }
+
+    .slot-pill.closed {
+      background: linear-gradient(180deg, #efe3e7 0%, #eadbe1 100%);
+      border-color: #d5c1cb;
+      color: #56474d;
+    }
+
+    .slot-pill.open {
+      background: linear-gradient(180deg, #faf3d6 0%, #f4e8b5 100%);
+      border-color: #d7c274;
+      color: #5a4e2b;
+    }
+
+    .slot-pill .mini-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .slot-pill.closed .mini-dot {
+      background: var(--accent-rose-deep);
+    }
+
+    .slot-pill.open .mini-dot {
+      background: #fffaf0;
+      border: 1px solid var(--accent-gold-deep);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 800;
+      color: #5b4f44;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1.5px solid #ddd0bd;
+      border-radius: 12px;
+      background: #fffdf9;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--accent-gold-deep);
+      box-shadow: 0 0 0 4px rgba(216, 192, 125, 0.15);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .pretty-select {
+      position: relative;
+    }
+
+    .pretty-select-trigger {
+      width: 100%;
+      min-height: 50px;
+      border: 1.5px solid #ddd0bd;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fffefb, #f7f0e6);
+      padding: 12px 44px 12px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      box-shadow: 0 4px 10px rgba(120, 96, 72, 0.05);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      position: relative;
+      text-align: left;
+    }
+
+    .pretty-select-trigger:hover {
+      border-color: #ccb99f;
+      box-shadow: 0 8px 16px rgba(120, 96, 72, 0.08);
+    }
+
+    .pretty-select.open .pretty-select-trigger {
+      border-color: var(--accent-gold-deep);
+      box-shadow: 0 0 0 4px rgba(216, 192, 125, 0.15);
+    }
+
+    .pretty-select-trigger::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid #8b7967;
+      border-bottom: 2px solid #8b7967;
+      transform: translateY(-65%) rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+
+    .pretty-select.open .pretty-select-trigger::after {
+      transform: translateY(-35%) rotate(225deg);
+    }
+
+    .pretty-select-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 100%;
+      background: #fffdf9;
+      border: 1.5px solid #ddd0bd;
+      border-radius: 16px;
+      box-shadow: 0 14px 24px rgba(96, 84, 67, 0.12);
+      padding: 8px;
+      display: none;
+      z-index: 50;
+    }
+
+    .pretty-select.open .pretty-select-menu {
+      display: block;
+    }
+
+    .pretty-option {
+      width: 100%;
+      border: none;
+      background: linear-gradient(180deg, #fffdf9, #f8f2e8);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      margin-bottom: 6px;
+    }
+
+    .pretty-option:last-child {
+      margin-bottom: 0;
+    }
+
+    .pretty-option:hover {
+      background: linear-gradient(180deg, #fff8e8, #f4ead0);
+      transform: translateY(-1px);
+    }
+
+    .pretty-option.selected {
+      background: linear-gradient(180deg, #fff4da, #f3e1ac);
+      color: #5f4f2f;
+      box-shadow: inset 0 0 0 1px #d7c274;
+    }
+
+    .pretty-option.placeholder-option {
+      color: var(--text-sub);
+    }
+
+    .radio-group {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .radio-option {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      background: linear-gradient(180deg, #fffdf9, #f6efe4);
+      border: 1.5px solid #ddd0bd;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 6px 14px rgba(120, 96, 72, 0.05);
+      min-height: 92px;
+    }
+
+    .radio-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .radio-option::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid #cdbda7;
+      background: #fff;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option.is-selected {
+      border-color: var(--accent-gold-deep);
+      background: linear-gradient(180deg, #fff8e8, #f6e8bf);
+      box-shadow: 0 10px 18px rgba(183, 157, 85, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .radio-option.is-selected::before {
+      border-color: var(--accent-gold-deep);
+      background: radial-gradient(circle at center, #b79d55 45%, #fff 48%);
+    }
+
+    .radio-option small {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    .option-price-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .check-option {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      min-height: 88px;
+      background: linear-gradient(180deg, #fffdf9, #f6efe4);
+      border: 1.5px solid #ddd0bd;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 6px 14px rgba(120, 96, 72, 0.05);
+    }
+
+    .check-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .check-option::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 2px solid #cdbda7;
+      background: #fff;
+      transition: all 0.2s ease;
+    }
+
+    .check-option:has(input:checked) {
+      border-color: #cfaebc;
+      background: linear-gradient(180deg, #fbf2f5, #f0dfe6);
+      box-shadow: 0 10px 18px rgba(164, 123, 147, 0.14);
+      transform: translateY(-2px);
+    }
+
+    .check-option:has(input:checked)::before {
+      content: "✓";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      background: var(--accent-rose-deep);
+      border-color: var(--accent-rose-deep);
+    }
+
+    .check-option small {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    .radio-option:hover,
+    .check-option:hover {
+      transform: translateY(-2px);
+      border-color: #ccb99f;
+      box-shadow: 0 10px 18px rgba(120, 96, 72, 0.08);
+    }
+
+    .summary {
+      margin-top: 18px;
+      padding: 16px;
+      background: #f7f1e8;
+      border: 1.5px solid #d9ccb9;
+      border-radius: 16px;
+    }
+
+    .summary h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--text-main);
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: 900;
+      color: #6f5d4d;
+      margin-bottom: 12px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button.action {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .primary {
+      background: var(--button-primary);
+      color: var(--button-primary-text);
+    }
+
+    .secondary {
+      background: var(--button-secondary);
+      color: var(--button-secondary-text);
+      border: 1.5px solid #d9ccb8;
+    }
+
+    .helper {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    pre.output {
+      margin: 14px 0 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #fffdf9;
+      border: 1.5px solid #ddd0bd;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 14px;
+      color: #473c33;
+      min-height: 180px;
+    }
+
+    .collab-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .menu-dark-panel {
+      background: linear-gradient(180deg, #f8f4ec 0%, #f3ede3 100%);
+      border: 1.5px solid #d9ccb8;
+      border-radius: 22px;
+      padding: 18px;
+      color: var(--text-main);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+    }
+
+    .menu-dark-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #e6dccd;
+      margin-bottom: 14px;
+    }
+
+    .menu-dark-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent-brown);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+
+    .menu-dark-kicker::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d3b8c2, #b48a9f);
+    }
+
+    .menu-dark-title {
+      margin: 0 0 4px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+    }
+
+    .menu-dark-subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .menu-dark-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-self: center;
+    }
+
+    .menu-dark-btn {
+      appearance: none;
+      border: 1px solid #d8cab7;
+      background: #fffdf8;
+      color: #5c5147;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .menu-accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu-item {
+      background: var(--menu-card);
+      border: 1px solid var(--menu-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .menu-item-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+
+    .menu-item-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid #ded2c1;
+      background: linear-gradient(180deg, #fffefb, #f0e8db);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #8a7562;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .menu-item-main {
+      min-width: 0;
+    }
+
+    .menu-item-title {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .menu-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .menu-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      border: 1px solid #ddd0bc;
+      background: #f4ece1;
+      color: #5a5046;
+    }
+
+    .menu-badge.pink {
+      background: linear-gradient(180deg, #efdfdf, #e5d0d6);
+      border-color: #d3bcc4;
+      color: #5d4c52;
+    }
+
+    .menu-badge.purple {
+      background: linear-gradient(180deg, #eee6dd, #e6dccf);
+      border-color: #d3c6b4;
+      color: #5c5249;
+    }
+
+    .menu-badge.dark {
+      background: #f7f1e8;
+      color: #6e6359;
+    }
+
+    .menu-item-price {
+      font-size: 14px;
+      font-weight: 900;
+      color: #6a5f56;
+      white-space: nowrap;
+      padding-left: 12px;
+    }
+
+    .menu-item-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid #ddd0bd;
+      background: linear-gradient(180deg,#fffefb,#efe6d8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .menu-item-toggle:hover {
+      background: linear-gradient(180deg,#fffdf8,#e8ddcd);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    }
+
+    .menu-item-toggle .arrow {
+      width: 10px;
+      height: 10px;
+      border-right: 3px solid #7b6c5d;
+      border-bottom: 3px solid #7b6c5d;
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+    }
+
+    .menu-item.open .menu-item-toggle .arrow {
+      transform: rotate(225deg);
+    }
+
+    .menu-item.open .menu-item-toggle {
+      background: linear-gradient(180deg,#f4ead7,#e6d9c6);
+      border-color:#d2c3ae;
+    }
+
+    .menu-item-body {
+      display: none;
+      padding: 0 16px 16px 64px;
+      border-top: 1px solid #ece2d4;
+      background: #faf7f1;
+    }
+
+    .menu-item.open .menu-item-body {
+      display: block;
+    }
+
+    .menu-subcard {
+      margin-top: 12px;
+      background: #fffdf9;
+      border: 1px solid #e3d8c7;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .menu-subcard-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .menu-subcard-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .menu-price-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #5c4f3d;
+      background: linear-gradient(180deg, #f5e9bf, #ebd998);
+      border: 1px solid #d0ba70;
+      white-space: nowrap;
+    }
+
+    .menu-detail-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text-sub);
+      font-size: 13px;
+    }
+
+    .menu-detail-list li {
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 860px) {
+      .sample-grid,
+      .form-grid,
+      .process-grid,
+      .collab-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .radio-group,
+      .option-price-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .slot-status-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .slot-month {
+        grid-column: 1 / -1;
+        justify-self: start;
+        min-width: 72px;
+      }
+
+      .menu-dark-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .menu-item-head {
+        grid-template-columns: 34px 1fr 34px;
+      }
+
+      .menu-item-price {
+        grid-column: 2 / 3;
+        padding-left: 0;
+        margin-top: 4px;
+      }
+
+      .menu-item-toggle {
+        grid-column: 3 / 4;
+        grid-row: 1 / 3;
+      }
+
+      .menu-item-body {
+        padding: 0 14px 14px 14px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- 1. 샘플 -->
+    <section class="panel" id="samples">
+      <span class="section-label">01. Live2D 작업 샘플</span>
+      <h1 class="title">버튜버 Live2D 작업 페이지</h1>
+      <p class="subtitle">포스터 / 리깅 영상 / 표정 샘플을 한 페이지에서 확인할 수 있도록 구성한 의뢰 안내 페이지입니다.</p>
+
+      <div class="sample-grid">
+        <div class="card">
+          <h3>포스터 및 사진</h3>
+          <div class="poster-box">포스터 / 대표 이미지 영역<br>이미지 파일로 교체해서 사용</div>
+        </div>
+
+        <div class="card">
+          <h3>작업 샘플</h3>
+          <div class="video-box">리깅된 영상 영역<br>YouTube / mp4 / iframe 삽입 가능</div>
+          <div class="expression-box">표정 샘플 영역</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 이벤트 -->
+    <section class="panel" id="event">
+      <span class="section-label">02. 이벤트</span>
+      <h2 class="title" style="font-size: 28px;">진행 중인 이벤트</h2>
+
+      <div class="notice-box">
+        <div class="notice-head">이벤트 기간</div>
+        <div class="notice-body">
+          <div class="field" style="margin-bottom: 16px;">
+            <div
+              id="eventTitle"
+              style="
+                font-size: 28px;
+                font-weight: 900;
+                color: rgb(241, 172, 22);
+                line-height: 1.3;
+                padding: 6px 2px;
+              "
+            >
+              이벤트 이름
+            </div>
+          </div>
+
+          <div class="field">
+            <label>이벤트 내용</label>
+            <div
+              id="eventDesc"
+              style="
+                width: 100%;
+                border: 1.5px solid #ddd0bd;
+                border-radius: 12px;
+                background: #f7f1e8;
+                padding: 12px 14px;
+                font-size: 14px;
+                color: var(--text-main);
+                white-space: pre-wrap;
+                line-height: 1.6;
+              "
+            >
+리뷰 작성 시
+표정 3개 → 5개
+100만원 → 80만원
+20만원 할인가로 진행합니다!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 공지사항 -->
+    <section class="panel" id="notice">
+      <span class="section-label">03. 공지사항</span>
+      <h2 class="title" style="font-size: 28px;">작업 공지사항</h2>
+
+      <div class="notice-box">
+        <div class="notice-head">작업 안내</div>
+        <div class="notice-body">
+          <p>작업기간은 최소 5일에서 최대 30일입니다.</p>
+          <p>평균 기간은 15일 이내입니다.</p>
+        </div>
+      </div>
+
+      <div class="notice-box">
+        <div class="notice-head">저작권 안내</div>
+        <div class="notice-body">
+          <p>모든 작업물은 포트폴리오에 활용될 수 있습니다.</p>
+          <p>저작권의 이용권을 구매하실 수 있으며, 구매 시 타작가 의뢰와 라이센스 활용이 가능합니다.</p>
+        </div>
+      </div>
+
+      <div class="notice-box">
+        <div class="notice-head">예약 및 환불 안내</div>
+        <div class="notice-body">
+          <p>작업 예약은 총 금액 전액 결제 후 확정됩니다.</p>
+          <p>예약 파기 시 10%의 위약금이 발생합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 작업 -->
+    <section class="panel" id="process">
+      <span class="section-label">04. 작업</span>
+      <h2 class="title" style="font-size: 28px;">작업 과정</h2>
+
+      <div class="notice-box">
+        <div class="notice-head">작업순서</div>
+        <div class="notice-body">
+          <p>문의 → 주문 및 입금 → 시안 전달 → 컨펌 → 대략적인 파츠분리(밑색) → 컨펌 → 완성 및 최종컨펌</p>
+        </div>
+      </div>
+
+      <div class="notice-box">
+        <div class="notice-head">작업과정</div>
+        <div class="notice-body">
+          <p>시안전달 → 파츠분리 및 중간과정 → 완성본 전달</p>
+          <ul>
+            <li>시안 단계에서 최대한 조율해드립니다.</li>
+            <li>파츠가 많은 경우 작업기간이 늘어날 수 있으며 사전 공지드립니다.</li>
+            <li>컨펌 단계 외 수정 요청 시 추가금이 있습니다.</li>
+            <li>리깅 과정에서 파츠 관련 수정 요청은 무료로 진행해드립니다.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step"><div class="num">1</div><strong>문의</strong><span>작업 문의 확인</span></div>
+        <div class="process-step"><div class="num">2</div><strong>주문 및 입금</strong><span>예약 확정 및 작업 일정 안내</span></div>
+        <div class="process-step"><div class="num">3</div><strong>시안 전달</strong><span>콘셉트/방향 체크</span></div>
+        <div class="process-step"><div class="num">4</div><strong>컨펌</strong><span>시안 확인 후 조율</span></div>
+        <div class="process-step"><div class="num">5</div><strong>파츠분리 및 중간과정</strong><span>밑색/구조 작업 진행</span></div>
+        <div class="process-step"><div class="num">6</div><strong>완성 및 최종컨펌</strong><span>최종본 전달</span></div>
+      </div>
+    </section>
+
+    <!-- 5. 협업 작가 -->
+    <section class="panel" id="collab">
+      <span class="section-label">05. 리깅 협업 작가</span>
+
+      <div class="slot-box">
+        <strong>안내</strong>
+        <p style="margin: 8px 0 0; font-size: 14px; color: var(--text-sub);">
+          본 이벤트는 일러스트와 리깅 양쪽 결제가 모두 완료된 경우에만 적용됩니다.
+        </p>
+      </div>
+
+      <div class="collab-grid">
+        <div class="card">
+          <h3>협업 작가 1</h3>
+          <div class="collab-image-box">
+            협업 작가 이미지 1
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>협업 작가 2</h3>
+          <div class="collab-image-box">
+            협업 작가 이미지 2
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 슬롯 -->
+    <section class="panel" id="slot">
+      <span class="section-label">06. 슬롯</span>
+      <h2 class="title" style="font-size: 28px;">슬롯 안내</h2>
+      <p class="subtitle">매월 최대 2명의 인원만 집중하여 작업을 진행하고 있으며, 아래 슬롯 현황을 참고해 주시기 바랍니다. <br> 결제 완료 순으로 슬롯이 최종 확정되며, 앞선 작업이 마무리되는 대로 순차적으로 시작됩니다.</p>
+
+      <div class="slot-status-wrap">
+        <div class="slot-status-head">
+          <h3 class="slot-status-title">
+            <span class="heart">♡</span>
+            작업 슬롯 현황
+          </h3>
+
+          <div class="slot-legend">
+            <span><i class="slot-dot closed"></i> CLOSED</span>
+            <span><i class="slot-dot open"></i> OPEN</span>
+          </div>
+        </div>
+
+        <div class="slot-status-grid">
+          <div class="slot-month">3월</div>
+          <div class="slot-pill closed"><span class="mini-dot"></span> CLOSED</div>
+          <div class="slot-pill open"><span class="mini-dot"></span> OPEN</div>
+          <div class="slot-pill closed"><span class="mini-dot"></span> CLOSED</div>
+
+          <div class="slot-month">4월</div>
+          <div class="slot-pill closed"><span class="mini-dot"></span> CLOSED</div>
+          <div class="slot-pill open"><span class="mini-dot"></span> OPEN</div>
+          <div class="slot-pill open"><span class="mini-dot"></span> OPEN</div>
+
+          <div class="slot-month">5월</div>
+          <div class="slot-pill open"><span class="mini-dot"></span> OPEN</div>
+          <div class="slot-pill open"><span class="mini-dot"></span> OPEN</div>
+          <div class="slot-pill open"><span class="mini-dot"></span> OPEN</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 메뉴 -->
+    <section class="panel" id="menu">
+      <span class="section-label">07. 메뉴</span>
+
+      <div class="menu-dark-panel">
+        <div class="menu-dark-top">
+          <div>
+            <div class="menu-dark-kicker">MENU</div>
+            <h2 class="menu-dark-title">Live2D 리깅 메뉴</h2>
+            <p class="menu-dark-subtitle">자세한 내용은 펼쳐서 확인</p>
+          </div>
+
+          <div class="menu-dark-actions">
+            <button type="button" class="menu-dark-btn" id="expandAllBtn">전체 펼치기</button>
+            <button type="button" class="menu-dark-btn" id="collapseAllBtn">전체 접기</button>
+          </div>
+        </div>
+
+        <div class="menu-accordion-list">
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">◈</div>
+
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">LD 리깅</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge pink">전신 ₩500,000</span>
+                  <span class="menu-badge purple">반신 ₩350,000</span>
+                  <span class="menu-badge dark">기본 구성 포함</span>
+                </div>
+              </div>
+
+              <div class="menu-item-price">₩350,000 ~ ₩500,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <div class="menu-subcard-top">
+                  <h4 class="menu-subcard-title">LD 전신 리깅</h4>
+                  <span class="menu-price-chip">₩500,000</span>
+                </div>
+                <ul class="menu-detail-list">
+                  <li>머리 XYZ / 몸 XYZ (좌우 · 상하 · 좌우 기울임)</li>
+                  <li>눈동자 물리 · 눈큰 눈 · 눈썹 움직임</li>
+                  <li>입 모양 9단계 이상 정교 제작</li>
+                  <li>머리카락 흔들림 물리 & 전신 의상 물리</li>
+                  <li>허리 틀기 포함</li>
+                </ul>
+              </div>
+
+              <div class="menu-subcard">
+                <div class="menu-subcard-top">
+                  <h4 class="menu-subcard-title">LD 반신 리깅</h4>
+                  <span class="menu-price-chip">₩350,000</span>
+                </div>
+                <ul class="menu-detail-list">
+                  <li>머리 XYZ / 몸 XYZ (좌우 · 상하 · 좌우 기울임)</li>
+                  <li>눈동자 물리 · 눈큰 눈 · 눈썹 움직임</li>
+                  <li>입 모양 9단계 이상 정교 제작</li>
+                  <li>머리카락 흔들림 물리 & 상체 의상 물리</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">✦</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">표정 · 페이셜 옵션</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge purple">간단 ₩10,000</span>
+                  <span class="menu-badge pink">애니 ₩20,000</span>
+                  <span class="menu-badge dark">입/눈/혀</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩10,000 ~ ₩30,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>간단 표정 추가: 미소, 당황, 놀람 등</li>
+                  <li>애니 표정: 반짝임, 하이라이트 변화, 강조 연출</li>
+                  <li>표정 구성은 캐릭터 콘셉트에 맞춰 조정 가능</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">⟲</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">VBridger</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge purple">연동 ₩50,000</span>
+                  <span class="menu-badge dark">발음 보정</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩50,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>iPhone 트래킹 기준 VBridger 세팅</li>
+                  <li>입모양, 볼, 미세 표정 보정</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">☞</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">손 옵션</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge purple">1종 ₩30,000</span>
+                  <span class="menu-badge dark">소품 동작</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩30,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>브이, 손인사, 손가락 포즈 등 추가 가능</li>
+                  <li>간단 소품 연동 동작 가능</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">↺</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">귀 · 꼬리 옵션</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge pink">물리 조정 ₩30,000</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩30,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>귀/꼬리 흔들림 물리 추가</li>
+                  <li>감정에 맞춘 강조 움직임 조정 가능</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">⚙</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">기타 옵션</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge dark">ON/OFF · 토글관리</span>
+                  <span class="menu-badge purple">소품</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩10,000 ~ ₩30,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>안경 ON/OFF, 후드 ON/OFF, 액세서리 토글</li>
+                  <li>간단 소품 추가 및 보정</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">♡</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">가치코미</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge pink">단독컷 ₩100,000</span>
+                  <span class="menu-badge purple">페어컷 ₩200,000</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩100,000 ~ ₩200,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>홍보용 키비주얼 / 썸네일 연출형 작업</li>
+                  <li>단독, 듀오 구성 가능</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">＋</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">신규 의상 · 헤어</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge purple">헤어 ₩150,000</span>
+                  <span class="menu-badge pink">의상 ₩200,000</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩150,000 ~ ₩200,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>기존 모델용 헤어 추가 제작</li>
+                  <li>신규 의상 파츠 분리 및 리깅 대응 가능</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-head">
+              <div class="menu-item-icon">⌗</div>
+              <div class="menu-item-main">
+                <h3 class="menu-item-title">기타 서비스</h3>
+                <div class="menu-badges">
+                  <span class="menu-badge purple">앵커 배경계 ₩200,000</span>
+                  <span class="menu-badge dark">설치 도움 ₩0</span>
+                </div>
+              </div>
+              <div class="menu-item-price">₩0 ~ ₩200,000</div>
+              <div class="menu-item-toggle"><span class="arrow"></span></div>
+            </div>
+
+            <div class="menu-item-body">
+              <div class="menu-subcard">
+                <ul class="menu-detail-list">
+                  <li>방송 세팅 관련 간단 안내</li>
+                  <li>추가 서비스는 문의 후 견적 조정</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. 신청양식 -->
+    <section class="panel" id="apply">
+      <span class="section-label">08. 신청양식</span>
+      <h2 class="title" style="font-size: 28px;">신청양식</h2>
+      <p class="subtitle">항목을 선택/작성한 뒤 “문의 내용 복사”를 눌러 그대로 붙여넣어 주세요.</p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="nickname">방송 닉네임</label>
+          <input id="nickname" placeholder="예: 미작성" />
+        </div>
+
+        <div class="field">
+          <label for="platform">방송 플랫폼 & 닉네임</label>
+          <input id="platform" placeholder="예: 치지직 / 유튜브 / 트위치 등" />
+        </div>
+
+        <div class="field">
+          <label for="debutDate">희망 마감일 / 데뷔 예정일</label>
+          <input id="debutDate" placeholder="예: 2025-02-14" />
+        </div>
+
+        <div class="field">
+          <label for="businessType">기업세 / 개인세</label>
+          <div class="pretty-select" data-target="businessType">
+            <input type="hidden" id="businessType" value="미작성" />
+            <button type="button" class="pretty-select-trigger">선택해주세요</button>
+            <div class="pretty-select-menu">
+              <button type="button" class="pretty-option placeholder-option" data-value="미작성">선택해주세요</button>
+              <button type="button" class="pretty-option" data-value="기업세">기업세</button>
+              <button type="button" class="pretty-option" data-value="개인세">개인세</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="appearance">캐릭터 외관 설정</label>
+          <textarea id="appearance" placeholder="성별, 나이 및 키, 정확한 색상정보, 의상, 성격, 분위기, 체형, 표정 등을 작성해주세요."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="device">트래킹 사용 장치</label>
+          <div class="pretty-select" data-target="device">
+            <input type="hidden" id="device" value="미작성" />
+            <button type="button" class="pretty-select-trigger">선택해주세요</button>
+            <div class="pretty-select-menu">
+              <button type="button" class="pretty-option placeholder-option" data-value="미작성">선택해주세요</button>
+              <button type="button" class="pretty-option" data-value="웹캠">웹캠</button>
+              <button type="button" class="pretty-option" data-value="iOS">iOS</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="collabArtist">협업 작가</label>
+          <input id="collabArtist" placeholder="없으면 '해당 없음' 입력" />
+        </div>
+
+        <div class="field">
+          <label for="copyrightBuy">저작권 구매 여부</label>
+          <div class="pretty-select" data-target="copyrightBuy">
+            <input type="hidden" id="copyrightBuy" value="미선택" />
+            <button type="button" class="pretty-select-trigger">선택해주세요</button>
+            <div class="pretty-select-menu">
+              <button type="button" class="pretty-option placeholder-option" data-value="미선택">선택해주세요</button>
+              <button type="button" class="pretty-option" data-value="구매">구매</button>
+              <button type="button" class="pretty-option" data-value="미구매">미구매</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="privateUse">비공개 여부</label>
+          <div class="pretty-select" data-target="privateUse">
+            <input type="hidden" id="privateUse" value="미선택" />
+            <button type="button" class="pretty-select-trigger">선택해주세요</button>
+            <div class="pretty-select-menu">
+              <button type="button" class="pretty-option placeholder-option" data-value="미선택">선택해주세요</button>
+              <button type="button" class="pretty-option" data-value="비공개">비공개</button>
+              <button type="button" class="pretty-option" data-value="공개 가능">공개 가능</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>리깅 기본 옵션</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="baseOption" value="800000" data-label="새해 이벤트 패키지 (표정 5개 포함)" />
+              새해 이벤트 패키지
+              <small>표정 5개 포함 / ₩800,000</small>
+            </label>
+
+            <label class="radio-option">
+              <input type="radio" name="baseOption" value="1000000" data-label="기본 패키지 (표정 3개 포함)" />
+              기본 패키지
+              <small>표정 3개 포함 / ₩1,000,000</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label>추가 옵션</label>
+          <div class="option-price-grid">
+            <label class="check-option">
+              <input type="checkbox" class="addon" data-price="5000" data-label="표정 추가 1개" />
+              표정 추가 1개
+              <small>₩5,000</small>
+            </label>
+
+            <label class="check-option">
+              <input type="checkbox" class="addon" data-price="20000" data-label="가치코미" />
+              가치코미
+              <small>₩20,000</small>
+            </label>
+
+            <label class="check-option">
+              <input type="checkbox" class="addon" data-price="30000" data-label="추가 애니메이션" />
+              추가 애니메이션
+              <small>₩30,000</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="etc">기타 문의내용</label>
+          <textarea id="etc" placeholder="기타 요청사항이 있으면 작성해주세요. 없으면 비워두셔도 됩니다."></textarea>
+        </div>
+      </div>
+
+      <div class="summary">
+        <h3>문의 텍스트</h3>
+        <div class="total" id="totalPrice">선택 합계: ₩800,000</div>
+        <div class="helper">문의 텍스트에 항목/총액이 함께 포함됩니다.</div>
+        <div class="button-row">
+          <button type="button" class="action primary" id="copyBtn">문의 내용 복사</button>
+          <button type="button" class="action secondary" id="previewBtn">미리보기 갱신</button>
+        </div>
+        <pre class="output" id="outputText"></pre>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function formatKRW(value) {
+      return "₩" + Number(value).toLocaleString("ko-KR");
+    }
+
+    function syncBaseOptionUI() {
+      const options = document.querySelectorAll(".radio-option");
+      options.forEach((label) => {
+        const input = label.querySelector('input[name="baseOption"]');
+        label.classList.toggle("is-selected", !!input.checked);
+      });
+    }
+
+    function getSelectedBaseOption() {
+      const selected = document.querySelector('input[name="baseOption"]:checked');
+      return {
+        price: Number(selected?.value || 0),
+        label: selected?.dataset.label || "미선택"
+      };
+    }
+
+    function getAddonData() {
+      const addons = [...document.querySelectorAll(".addon:checked")];
+      return {
+        total: addons.reduce((sum, el) => sum + Number(el.dataset.price || 0), 0),
+        labels: addons.map(el => el.dataset.label)
+      };
+    }
+
+    function valueOrFallback(id, fallback) {
+      const el = document.getElementById(id);
+      const value = (el?.value || "").trim();
+      return value || fallback;
+    }
+
+    function buildOutput() {
+      const nickname = valueOrFallback("nickname", "미작성");
+      const platform = valueOrFallback("platform", "미작성");
+      const debutDate = valueOrFallback("debutDate", "미작성");
+      const businessType = valueOrFallback("businessType", "미작성");
+      const appearance = valueOrFallback("appearance", "미작성");
+      const device = valueOrFallback("device", "웹캠");
+      const collabArtist = valueOrFallback("collabArtist", "해당 없음");
+      const copyrightBuy = valueOrFallback("copyrightBuy", "미선택");
+      const privateUse = valueOrFallback("privateUse", "미선택");
+      const etc = valueOrFallback("etc", "없음");
+
+      const base = getSelectedBaseOption();
+      const addons = getAddonData();
+      const total = base.price + addons.total;
+      const addonText = addons.labels.length ? addons.labels.join(", ") : "없음";
+
+      document.getElementById("totalPrice").textContent = "선택 합계: " + formatKRW(total);
+
+      const text =
+`안녕하세요. 리깅 신청 문의드립니다.
+
+1) 방송 닉네임: ${nickname}
+2) 기업세 / 개인세: ${businessType}
+3) 캐릭터 외관 설정:
+${appearance}
+
+4) 선택 합계: ${formatKRW(total)}
+5) PSD 파일 준비 여부: 예
+6) 방송 플랫폼 & 닉네임: ${platform}
+7) 사용 장치: ${device}
+8) 협업 작가: ${collabArtist}
+9) 데뷔 예정일: ${debutDate}
+10) 저작권 구매 여부: ${copyrightBuy}
+11) 비공개 여부: ${privateUse}
+12) 기본 옵션: ${base.label}
+13) 추가 옵션: ${addonText}
+14) 기타 문의내용: ${etc}
+
+감사합니다!`;
+
+      document.getElementById("outputText").textContent = text;
+      return text;
+    }
+
+    function setupPrettySelects() {
+      const prettySelects = document.querySelectorAll(".pretty-select");
+
+      prettySelects.forEach((selectBox) => {
+        const targetId = selectBox.dataset.target;
+        const hiddenInput = document.getElementById(targetId);
+        const trigger = selectBox.querySelector(".pretty-select-trigger");
+        const options = selectBox.querySelectorAll(".pretty-option");
+
+        trigger.addEventListener("click", function (e) {
+          e.stopPropagation();
+
+          prettySelects.forEach((other) => {
+            if (other !== selectBox) other.classList.remove("open");
+          });
+
+          selectBox.classList.toggle("open");
+        });
+
+        options.forEach((option) => {
+          option.addEventListener("click", function (e) {
+            e.stopPropagation();
+
+            const value = option.dataset.value;
+            hiddenInput.value = value;
+            trigger.textContent = option.textContent;
+
+            options.forEach((opt) => opt.classList.remove("selected"));
+            option.classList.add("selected");
+
+            selectBox.classList.remove("open");
+            buildOutput();
+          });
+        });
+
+        const initialValue = hiddenInput.value;
+        const initialOption = [...options].find(opt => opt.dataset.value === initialValue);
+        if (initialOption) {
+          initialOption.classList.add("selected");
+          trigger.textContent = initialOption.textContent;
+        }
+      });
+
+      document.addEventListener("click", function () {
+        prettySelects.forEach((selectBox) => selectBox.classList.remove("open"));
+      });
+    }
+
+    function setupToggleableBaseOption() {
+      const baseInputs = document.querySelectorAll('input[name="baseOption"]');
+
+      baseInputs.forEach((input) => {
+        input.addEventListener("click", function () {
+          if (this.dataset.wasChecked === "true") {
+            this.checked = false;
+            this.dataset.wasChecked = "false";
+          } else {
+            baseInputs.forEach((other) => {
+              other.dataset.wasChecked = "false";
+            });
+            this.checked = true;
+            this.dataset.wasChecked = "true";
+          }
+
+          syncBaseOptionUI();
+          buildOutput();
+        });
+
+        input.addEventListener("mousedown", function () {
+          this.dataset.wasChecked = this.checked ? "true" : "false";
+        });
+      });
+
+      syncBaseOptionUI();
+    }
+
+    function setupMenuAccordion() {
+      const menuItems = document.querySelectorAll(".menu-item");
+      const expandAllBtn = document.getElementById("expandAllBtn");
+      const collapseAllBtn = document.getElementById("collapseAllBtn");
+
+      menuItems.forEach((item) => {
+        const head = item.querySelector(".menu-item-head");
+        if (!head) return;
+
+        head.addEventListener("click", function () {
+          item.classList.toggle("open");
+        });
+      });
+
+      if (expandAllBtn) {
+        expandAllBtn.addEventListener("click", function () {
+          menuItems.forEach((item) => item.classList.add("open"));
+        });
+      }
+
+      if (collapseAllBtn) {
+        collapseAllBtn.addEventListener("click", function () {
+          menuItems.forEach((item) => item.classList.remove("open"));
+        });
+      }
+    }
+
+    document.addEventListener("input", function (e) {
+      if (e.target.matches("input, textarea")) {
+        buildOutput();
+      }
+    });
+
+    document.addEventListener("change", function (e) {
+      if (e.target.matches(".addon")) {
+        buildOutput();
+      }
+    });
+
+    document.getElementById("previewBtn").addEventListener("click", function () {
+      buildOutput();
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      const text = buildOutput();
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("문의 내용이 복사되었습니다.");
+      } catch (e) {
+        alert("복사에 실패했습니다. 직접 선택해서 복사해주세요.");
+      }
+    });
+
+    buildOutput();
+    setupMenuAccordion();
+    setupPrettySelects();
+    setupToggleableBaseOption();
+  </script>
+</body>
+</html>
