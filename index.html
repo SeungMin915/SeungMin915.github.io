@@ -283,10 +283,13 @@
 
     .video-box {
       min-height: 300px;
+      position: relative;
+      padding: 14px 64px;
     }
 
     .collab-image-box {
-      min-height: 220px;
+      aspect-ratio: 16 / 9;
+      min-height: auto;
     }
 
     .poster-box img,
@@ -342,19 +345,25 @@
     }
 
     .poster-box img,
-    .sample-thumb img {
+    .sample-thumb img,
+    .sample-thumb video,
+    .video-box video {
       transition: opacity 0.28s ease, transform 0.28s ease;
       will-change: opacity, transform;
     }
 
     .poster-box img.is-changing,
-    .sample-thumb img.is-changing {
+    .sample-thumb img.is-changing,
+    .sample-thumb video.is-changing,
+    .video-box video.is-changing {
       opacity: 0;
       transform: translateX(16px) scale(0.985);
     }
 
     .poster-box img.is-changing.reverse,
-    .sample-thumb img.is-changing.reverse {
+    .sample-thumb img.is-changing.reverse,
+    .sample-thumb video.is-changing.reverse,
+    .video-box video.is-changing.reverse {
       transform: translateX(-16px) scale(0.985);
     }
 
@@ -799,11 +808,21 @@
       margin-bottom: 10px;
     }
 
-    .sample-thumb img {
+    .sample-thumb img,
+    .sample-thumb video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    .sample-thumb img {
+      cursor: zoom-in;
+    }
+
+    .poster-box img,
+    .collab-image-box img {
+      cursor: zoom-in;
     }
 
     .sample-meta-no {
@@ -1372,15 +1391,21 @@
     }
 
     .menu-item-price {
+      width: 120px;
+      min-width: 120px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
       font-size: 14px;
       font-weight: 900;
-      white-space: nowrap;
-      padding-left: 12px;
       color: var(--gold-text);
       background: linear-gradient(180deg, #fffefb, #f0e8db);
       border: 1px solid var(--gold-border);
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 0 12px;
+      text-align: center;
     }
 
     .menu-item-toggle {
@@ -1455,6 +1480,64 @@
       margin-bottom: 6px;
     }
 
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(27, 23, 19, 0.84);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+    }
+
+    .image-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .image-modal-inner {
+      position: relative;
+      max-width: min(92vw, 1400px);
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-modal img {
+      max-width: 100%;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+      background: #fff;
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+
     @media (max-width: 860px) {
       .sample-grid,
       .top-intro-grid,
@@ -1487,7 +1570,8 @@
         grid-column: 2 / 3;
         padding-left: 0;
         margin-top: 4px;
-        width: fit-content;
+        width: 120px;
+        min-width: 120px;
       }
 
       .menu-item-toggle {
@@ -1507,7 +1591,8 @@
         font-size: 26px;
       }
 
-      .poster-box {
+      .poster-box,
+      .video-box {
         padding: 12px 56px;
       }
 
@@ -1573,7 +1658,7 @@
           <h3>포스터 및 사진</h3>
           <div class="poster-box">
             <button type="button" class="poster-nav prev" id="posterPrevBtn" aria-label="이전 이미지">‹</button>
-            <img id="posterImage" src="images/art.png" alt="포스터 대표 이미지" />
+            <img id="posterImage" src="images/test.png" alt="포스터 이미지 1" data-expandable />
             <button type="button" class="poster-nav next" id="posterNextBtn" aria-label="다음 이미지">›</button>
           </div>
         </div>
@@ -1581,10 +1666,12 @@
         <div class="card">
           <h3>작업 샘플</h3>
           <div class="video-box">
-            <video controls playsinline muted preload="metadata">
-              <source src="images/rigging-sample.mp4" type="video/mp4" />
+            <button type="button" class="poster-nav prev" id="videoPrevBtn" aria-label="이전 작업 샘플">‹</button>
+            <video id="sampleVideo" controls playsinline muted preload="metadata">
+              <source src="images/face.mp4" type="video/mp4" />
               브라우저가 video 태그를 지원하지 않습니다.
             </video>
+            <button type="button" class="poster-nav next" id="videoNextBtn" aria-label="다음 작업 샘플">›</button>
           </div>
         </div>
       </div>
@@ -1601,20 +1688,30 @@
           </div>
 
           <div class="sample-slider-box">
-            <button type="button" class="sample-nav prev" id="expressionPrevBtn" aria-label="이전 표정 샘플">‹</button>
+            <button type="button" class="sample-nav prev" id="expressionPrevBtn" aria-label="이전 작업 샘플">‹</button>
 
             <div class="sample-slider-viewport">
               <div class="sample-card expression-card" id="expressionCard">
                 <div class="sample-thumb">
-                  <img id="expressionImage" src="images/sample-illust-1.jpg" alt="표정 샘플 1" />
+                  <video
+                    id="expressionVideo"
+                    controls
+                    playsinline
+                    muted
+                    loop
+                    preload="metadata"
+                  >
+                    <source src="images/face.mp4" type="video/mp4" />
+                    브라우저가 video 태그를 지원하지 않습니다.
+                  </video>
                 </div>
                 <div class="sample-meta-no" id="expressionNo">NO.1</div>
-                <div class="sample-name" id="expressionName">expression one</div>
+                <div class="sample-name" id="expressionName">sample one</div>
                 <div class="sample-desc" id="expressionDesc">기본 표정과 감정 변화 연출을 확인할 수 있는 샘플 카드입니다.</div>
               </div>
             </div>
 
-            <button type="button" class="sample-nav next" id="expressionNextBtn" aria-label="다음 표정 샘플">›</button>
+            <button type="button" class="sample-nav next" id="expressionNextBtn" aria-label="다음 작업 샘플">›</button>
           </div>
         </div>
 
@@ -1627,7 +1724,7 @@
           <div class="sample-card-grid">
             <div class="sample-card">
               <div class="sample-thumb">
-                <img src="images/1all.png" alt="디자인 샘플 1" />
+                <img src="images/design/design1.png" alt="디자인 샘플 1" data-expandable />
               </div>
               <div class="sample-meta-no">NO.1</div>
               <div class="sample-name">design one</div>
@@ -1636,7 +1733,7 @@
 
             <div class="sample-card">
               <div class="sample-thumb">
-                <img src="images/3test.png" alt="디자인 샘플 2" />
+                <img src="images/design/design2.png" alt="디자인 샘플 2" data-expandable />
               </div>
               <div class="sample-meta-no">NO.2</div>
               <div class="sample-name">design two</div>
@@ -1645,7 +1742,7 @@
 
             <div class="sample-card">
               <div class="sample-thumb">
-                <img src="images/2test.jpg" alt="디자인 샘플 3" />
+                <img src="images/design/design3.png" alt="디자인 샘플 3" data-expandable />
               </div>
               <div class="sample-meta-no">NO.3</div>
               <div class="sample-name">design three</div>
@@ -1909,7 +2006,7 @@
       <div class="card">
         <h3>협업 작가</h3>
         <div class="collab-image-box">
-          <img src="images/collab-artist-1.jpg" alt="협업 작가 이미지" />
+          <img src="images/artist/artist.png" alt="협업 작가 이미지" data-expandable />
         </div>
       </div>
     </section>
@@ -2317,37 +2414,52 @@
     </section>
   </div>
 
+  <div class="image-modal" id="imageModal" aria-hidden="true">
+    <div class="image-modal-inner">
+      <button type="button" class="image-modal-close" id="imageModalClose" aria-label="확대 이미지 닫기">×</button>
+      <img id="imageModalImg" src="" alt="확대 이미지" />
+    </div>
+  </div>
+
   <script>
     const posterImages = [
-      "images/1all.png",
-      "images/2all.png",
-      "images/3all.png",
-      "images/4all.png",
-      "images/art-5.png"
+      "images/poster/poster1.png",
+      "images/poster/poster2.png",
+      "images/poster/poster3.png",
+      "images/poster/poster4.png",
+      "images/poster/poster5.png"
+    ];
+
+    const videoSamples = [
+      "images/sample/sample1.mp4",
+      "images/sample/sample2.mp4",
+      "images/sample/sample3.mp4"
+
     ];
 
     const expressionSamples = [
       {
-        image: "images/sample-illust-1.jpg",
+        video: "images/face/face1.mp4",
         no: "NO.1",
-        name: "expression one",
+        name: "sample one",
         desc: "기본 표정과 감정 변화 연출을 확인할 수 있는 샘플 카드입니다."
       },
       {
-        image: "images/sample-illust-2.jpg",
+        video: "images/face/face2.mp4",
         no: "NO.2",
-        name: "expression two",
+        name: "sample two",
         desc: "눈매와 입모양 변화를 중심으로 분위기 차이를 비교할 수 있습니다."
       },
       {
-        image: "images/sample-illust-3.jpg",
+        video: "images/face/face3.mp4",
         no: "NO.3",
-        name: "expression three",
+        name: "sample three",
         desc: "캐릭터 성격에 맞는 다양한 감정 표현 예시를 보여주는 구성입니다."
       }
     ];
 
     let currentPosterIndex = 0;
+    let currentVideoIndex = 0;
     let currentExpressionIndex = 0;
 
     function formatKRW(value) {
@@ -2372,6 +2484,28 @@
 
       setTimeout(() => {
         imgEl.classList.remove("is-changing", "reverse");
+      }, 280);
+    }
+
+    function animateVideoChange(videoEl, nextSrc, direction = "next", onMidChange) {
+      if (!videoEl) return;
+
+      videoEl.classList.remove("reverse");
+      videoEl.classList.add("is-changing");
+
+      if (direction === "prev") {
+        videoEl.classList.add("reverse");
+      }
+
+      setTimeout(() => {
+        videoEl.pause();
+        videoEl.src = nextSrc;
+        videoEl.load();
+        if (typeof onMidChange === "function") onMidChange();
+      }, 140);
+
+      setTimeout(() => {
+        videoEl.classList.remove("is-changing", "reverse");
       }, 280);
     }
 
@@ -2414,36 +2548,69 @@
       }
     }
 
+    function renderVideoSampleImmediately() {
+      const videoEl = document.getElementById("sampleVideo");
+      if (!videoEl) return;
+
+      videoEl.src = videoSamples[currentVideoIndex];
+      videoEl.load();
+    }
+
+    function updateVideoSample(direction = "next") {
+      const videoEl = document.getElementById("sampleVideo");
+      if (!videoEl) return;
+
+      animateVideoChange(videoEl, videoSamples[currentVideoIndex], direction);
+    }
+
+    function setupVideoSlider() {
+      const prevBtn = document.getElementById("videoPrevBtn");
+      const nextBtn = document.getElementById("videoNextBtn");
+
+      if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+          currentVideoIndex = (currentVideoIndex - 1 + videoSamples.length) % videoSamples.length;
+          updateVideoSample("prev");
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+          currentVideoIndex = (currentVideoIndex + 1) % videoSamples.length;
+          updateVideoSample("next");
+        });
+      }
+    }
+
     function renderExpressionSampleImmediately() {
-      const imageEl = document.getElementById("expressionImage");
+      const videoEl = document.getElementById("expressionVideo");
       const noEl = document.getElementById("expressionNo");
       const nameEl = document.getElementById("expressionName");
       const descEl = document.getElementById("expressionDesc");
 
-      if (!imageEl || !noEl || !nameEl || !descEl) return;
+      if (!videoEl || !noEl || !nameEl || !descEl) return;
 
       const current = expressionSamples[currentExpressionIndex];
-      imageEl.src = current.image;
-      imageEl.alt = `표정 샘플 ${currentExpressionIndex + 1}`;
+      videoEl.src = current.video;
+      videoEl.load();
       noEl.textContent = current.no;
       nameEl.textContent = current.name;
       descEl.textContent = current.desc;
     }
 
     function updateExpressionSample(direction = "next") {
-      const imageEl = document.getElementById("expressionImage");
+      const videoEl = document.getElementById("expressionVideo");
       const noEl = document.getElementById("expressionNo");
       const nameEl = document.getElementById("expressionName");
       const descEl = document.getElementById("expressionDesc");
 
-      if (!imageEl || !noEl || !nameEl || !descEl) return;
+      if (!videoEl || !noEl || !nameEl || !descEl) return;
 
       const current = expressionSamples[currentExpressionIndex];
 
-      animateImageChange(
-        imageEl,
-        current.image,
-        `표정 샘플 ${currentExpressionIndex + 1}`,
+      animateVideoChange(
+        videoEl,
+        current.video,
         direction,
         function () {
           noEl.textContent = current.no;
@@ -2678,6 +2845,57 @@ ${appearance}
       });
     }
 
+    function openImageModal(src, alt) {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("imageModalImg");
+      if (!modal || !modalImg) return;
+
+      modalImg.src = src;
+      modalImg.alt = alt || "확대 이미지";
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("imageModalImg");
+      if (!modal || !modalImg) return;
+
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+
+      setTimeout(() => {
+        if (!modal.classList.contains("open")) {
+          modalImg.src = "";
+        }
+      }, 220);
+    }
+
+    function setupImageModal() {
+      document.addEventListener("click", function (e) {
+        const img = e.target.closest("img[data-expandable]");
+        if (img) {
+          openImageModal(img.src, img.alt);
+          return;
+        }
+
+        const modal = document.getElementById("imageModal");
+        const closeBtn = document.getElementById("imageModalClose");
+
+        if (e.target === modal || e.target === closeBtn) {
+          closeImageModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeImageModal();
+        }
+      });
+    }
+
     document.addEventListener("input", function (e) {
       if (e.target.matches("input, textarea")) {
         buildOutput();
@@ -2707,11 +2925,14 @@ ${appearance}
     buildOutput();
     renderPosterImageImmediately();
     setupPosterSlider();
+    renderVideoSampleImmediately();
+    setupVideoSlider();
     renderExpressionSampleImmediately();
     setupExpressionSlider();
     setupMenuAccordion();
     setupPrettySelects();
     setupToggleableBaseOption();
+    setupImageModal();
   </script>
 </body>
 </html>
