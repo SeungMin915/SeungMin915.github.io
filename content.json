@@ -299,8 +299,8 @@
       { "id": "extra_revision", "name": "추가 수정 횟수", "price": 10000 },
       { "id": "delay_reveal", "name": "작업 60일 이후 공개", "price": 50000 }
     ],
-    "reveal": [
-      { "id": "reveal_60days", "name": "작업완료 최소 60일 (기본)", "price": 0 }
+    "discount": [
+      { "id": "discount", "name": "2026년 리깅 이벤트", "price": -100000 }
     ]
   },
   "notices": [
@@ -343,6 +343,6 @@
     "layerFileOptions": ["YES", "NO"],
     "revealOptions": ["작업완료 최소 60일 (기본)"],
     "contactPlaceholder": "추가 문의 사항을 적어주세요.",
-    "reservationNoticePlaceholder": "기재한 최소 60일 (기본) 이후 일정으로 예약 신청 가능합니다."
+    "reservationNoticePlaceholder": "예약 관련 안내사항 입력."
   }
 }
