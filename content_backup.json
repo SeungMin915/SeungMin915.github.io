@@ -1,0 +1,266 @@
+{
+  "artist": {
+    "name": "Eryn",
+    "title": "Live2D 리거",
+    "intro": "안녕하세요 Live2D 리거 에린 Eryn 입니다.\n캐릭터의 개성을 살려 자연스럽고 예쁘게 움직이도록 작업하고 있습니다.\n현재 9월 작업부터 예약 받고 있습니다 방문해주셔서 감사드립니다!",
+    "tags": ["#발랄한 리깅", "#자연스러운 움직임", "#빠르고 꼼꼼하게"],
+    "socialLinks": {
+      "twitter": "#",
+      "youtube": "#",
+      "contact": "#"
+    }
+  },
+  "event": {
+    "enabled": true,
+    "title": "2026년 리깅 이벤트",
+    "badge": "협업 할인 중복 가능",
+    "description": "Live2D LD 전신 Full Body 리깅 10만원 할인",
+    "endDate": "2026-12-31"
+  },
+  "slots": {
+    "enabled": true,
+    "notice": "최근 3개월 일정만 안내드립니다. 이후 일정도 문의 주시면 조율 가능합니다.",
+    "months": [
+      {
+        "month": "2026-09",
+        "status": "available",
+        "slots": [
+          { "type": "fill", "label": "빈 슬롯" },
+          { "type": "empty", "label": "빈 슬롯" }
+        ]
+      },
+      {
+        "month": "2026-10",
+        "status": "available",
+        "slots": [
+          { "type": "empty", "label": "빈 슬롯" },
+          { "type": "empty", "label": "빈 슬롯" }
+        ]
+      },
+      {
+        "month": "2026-11",
+        "status": "available",
+        "slots": [
+          { "type": "empty", "label": "빈 슬롯" },
+          { "type": "empty", "label": "빈 슬롯" }
+        ]
+      }
+    ]
+  },
+  "showcase": [
+    {
+      "id": 1,
+      "title": "소팽꽁 작가님입 협업 판매 모델",
+      "subtitle": "[일러 60 + 리깅 55] 115만원 판매",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "thumbnail": "",
+      "illust": "소팽꽁",
+      "rig": "ERYN"
+    },
+    {
+      "id": 2,
+      "title": "오리지널 캐릭터 리깅 샘플",
+      "subtitle": "Full Body LD 리깅",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "thumbnail": "",
+      "illust": "작가님",
+      "rig": "ERYN"
+    },
+    {
+      "id": 3,
+      "title": "데빌 캐릭터 리깅",
+      "subtitle": "Full Body + 표정 추가",
+      "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "thumbnail": "",
+      "illust": "작가님",
+      "rig": "ERYN"
+    }
+  ],
+  "sampleCategories": [
+    {
+      "id": "free",
+      "label": "자유 움직임",
+      "samples": [
+        { "src": "", "alt": "자유 움직임 샘플 1", "caption": "" },
+        { "src": "", "alt": "자유 움직임 샘플 2", "caption": "" },
+        { "src": "", "alt": "자유 움직임 샘플 3", "caption": "" }
+      ]
+    },
+    {
+      "id": "face",
+      "label": "얼굴 디테일",
+      "description": "입 모션(IOS 기능) 및 VBridger를 활용한 얼굴 디테일 리깅이 가능합니다.",
+      "samples": [
+        { "src": "", "alt": "얼굴 디테일 샘플 1", "caption": "" },
+        { "src": "", "alt": "얼굴 디테일 샘플 2", "caption": "" },
+        { "src": "", "alt": "얼굴 디테일 샘플 3", "caption": "" }
+      ]
+    },
+    {
+      "id": "body",
+      "label": "몸 디테일",
+      "samples": [
+        { "src": "", "alt": "가슴 움직임", "caption": "가슴 움직임" },
+        { "src": "", "alt": "가지코이", "caption": "가지코이 (앞으로 내밀기)" },
+        { "src": "", "alt": "하리 움직임", "caption": "하리 움직임" }
+      ]
+    },
+    {
+      "id": "animal",
+      "label": "동물 파츠 움직임",
+      "description": "특정 신체 부위 움직임에 따른 움직임 구현이 가능합니다\nEX) 모을 때 꼬리/날개 움직임 증가; 눈썹 높낮이에 따른 동물 귀 반응",
+      "samples": []
+    }
+  ],
+  "collaborators": [
+    {
+      "initial": "소",
+      "name": "소팽꽁님",
+      "discount": "일러스트 / 리깅 각 5만원 할인",
+      "bonus": "감정 표정 파츠 총 5개",
+      "link": "#"
+    },
+    {
+      "initial": "포",
+      "name": "포은님",
+      "discount": "일러스트 1D / 리깅 5만원 할인",
+      "bonus": "감정 표정 파츠 총 3개",
+      "link": "#"
+    },
+    {
+      "initial": "나",
+      "name": "나에 Nae님",
+      "discount": "일러스트 / 리깅 각 5만원 할인",
+      "bonus": "감정 표정 파츠 총 3개",
+      "link": "#"
+    },
+    {
+      "initial": "R",
+      "name": "RioBH님",
+      "discount": "일러스트 / 리깅 각 5만원 할인",
+      "bonus": "감정 표정 파츠 총 3개",
+      "link": "#"
+    },
+    {
+      "initial": "피",
+      "name": "피치님",
+      "discount": "일러스트 / 리깅 각 5만원 할인",
+      "bonus": "감정 표정 파츠 총 7개",
+      "link": "#"
+    },
+    {
+      "initial": "C",
+      "name": "cooing님",
+      "discount": "일러스트 / 리깅 각 5만원 할인",
+      "bonus": "감정 표정 파츠 총 5개",
+      "link": "#"
+    }
+  ],
+  "baseOptions": {
+    "plans": [
+      {
+        "id": "fullbody",
+        "name": "LD 전신 Full Body 리깅",
+        "price": 700000,
+        "eventDiscount": 100000,
+        "description": "LD 몸 전신을 리깅하는 작업입니다.\n몸의 전체적인 움직임 흐름이 자연스럽게 이어지도록 구현합니다.\n발랄하면서도 자연스러운 움직임이 느껴지도록 작업을 진행합니다."
+      },
+      {
+        "id": "halfbody",
+        "name": "LD 반신 Bust 리깅",
+        "price": 300000,
+        "description": "LD 몸 반신(흉상)을 리깅하는 작업입니다.\n상체 표현에 집중된 구성으로,\n머리카락과 얼굴 움직임에 더 디테일하게 작업을 진행합니다."
+      }
+    ],
+    "includedOptions": [
+      "눈 깜박임 + 동공 물리 연산",
+      "눈동자 XY 움직임",
+      "눈썹 상하/각도/변형",
+      "입 모양 12점",
+      "얼굴 감정 표현 3가지",
+      "머리 XYZ 움직임 및 물리 연산",
+      "몸 XYZ 움직임 및 물리 연산",
+      "머리카락 물리 연산",
+      "의상/악세서리 물리 연산",
+      "기본 호흡",
+      "기본 의상/악세서리 ON&OFF 기능"
+    ]
+  },
+  "additionalOptions": {
+    "optionAdd": [
+      { "id": "hair_simple", "name": "헤어 [단순] 추가", "price": 80000 },
+      { "id": "hair_complex", "name": "헤어 [복잡] 추가", "price": 120000 },
+      { "id": "outfit_simple", "name": "의상 [단순] 추가", "price": 120000 },
+      { "id": "outfit_complex", "name": "의상 [복잡] 추가", "price": 160000 }
+    ],
+    "expressionPose": [
+      { "id": "expr_single", "name": "표정 [단순] 추가", "price": 10000 },
+      { "id": "expr_anim", "name": "표정 [애니메이션] 추가", "price": 16000 },
+      { "id": "kazikoi", "name": "가지코이 (앞으로 내밀기)", "price": 40000 }
+    ],
+    "iosPhysics": [
+      { "id": "blowing", "name": "볼빵빵", "price": 10000 },
+      { "id": "tongue", "name": "혀 메붕", "price": 10000 },
+      { "id": "mouth_x", "name": "입 X", "price": 10000 },
+      { "id": "vbridger", "name": "VBridger", "price": 60000 }
+    ],
+    "partsAdd": [
+      { "id": "arm_simple", "name": "팔 [단순] 파츠", "price": 20000 },
+      { "id": "arm_complex", "name": "팔 [복잡] 파츠 (게임기 등)", "price": 50000 },
+      { "id": "item", "name": "소품 (인형, 가방 등)", "price": 50000 }
+    ],
+    "animalParts": [
+      { "id": "ear_tail", "name": "동물 귀+꼬리", "price": 50000 },
+      { "id": "wing", "name": "날개", "price": 50000 }
+    ],
+    "other": [
+      { "id": "extra_revision", "name": "추가 수정 횟수", "price": 10000 },
+      { "id": "delay_reveal", "name": "작업 60일 이후 공개", "price": 50000 }
+    ],
+    "reveal": [
+      { "id": "reveal_60days", "name": "작업완료 최소 60일 (기본)", "price": 0 }
+    ]
+  },
+  "notices": [
+    {
+      "id": "payment",
+      "title": "견적/결제",
+      "content": "• 견적은 문의 양식 제출 후 안내드립니다.\n• 결제는 선불 100%로 진행됩니다.\n• 세금계산서 발행은 별도 문의 바랍니다."
+    },
+    {
+      "id": "work",
+      "title": "작업 안내",
+      "content": "• 작업 기간은 결제 확인 후 작업 시작부터 18일~20일 입니다.\n• 컨펌 피드백 전달이 늦어질 경우 일정이 지연될 수 있습니다.\n• 수정 횟수는 최대 2회이며, 수정 횟수 추가 요청은 추가금이 발생합니다.\n• 리깅 작업 중 아트 수정은 불가합니다."
+    },
+    {
+      "id": "files",
+      "title": "파일 전달",
+      "content": "• 작업 완료 후 .cmo3 / .moc3 파일로 전달드립니다.\n• 파일은 구글 드라이브 또는 WeTransfer로 전달드립니다.\n• 전달 후 7일 이내 세팅 관련 문의 지원합니다."
+    },
+    {
+      "id": "aftercare",
+      "title": "사후 관리",
+      "content": "• 납품 후 30일 이내 발생한 버그는 무상 수정합니다.\n• 30일 이후 발생한 버그는 유상 수정될 수 있습니다.\n• 2차 창작, 상업적 이용은 별도 문의 바랍니다."
+    }
+  ],
+  "workProcess": [
+    { "step": 1, "title": "문의", "items": ["문의 양식 제출"] },
+    { "step": 2, "title": "안내 및 입금", "items": ["견적 안내 및 입금 진행"] },
+    { "step": 3, "title": "얼굴 리깅", "items": ["눈 / 입 / 표정"] },
+    { "step": 4, "title": "머리 리깅", "items": ["머리 XYZ + 머리/머리카락 물리 연산"] },
+    { "step": 5, "title": "1차 컨펌", "items": ["수정 사항 반영"] },
+    { "step": 6, "title": "몸 리깅", "items": ["몸 XYZ + 몸/의상 물리 연산"] },
+    { "step": 7, "title": "2차 컨펌", "items": ["수정 사항 반영"] },
+    { "step": 8, "title": "작업 완성", "items": ["작업 전달 및 세팅 안내"] }
+  ],
+  "formFields": {
+    "characterNamePlaceholder": "캐릭터 이름을 적어주세요.",
+    "artistNamePlaceholder": "일러스트를 그려주신 작가님 이름을 적어주세요.",
+    "purposeOptions": ["개인-V튜버", "개인-기타", "상업용"],
+    "softwareOptions": ["VTube Studio", "기타"],
+    "layerFileOptions": ["YES", "NO"],
+    "revealOptions": ["작업완료 최소 60일 (기본)"],
+    "contactPlaceholder": "추가 문의 사항을 적어주세요.",
+    "reservationNoticePlaceholder": "기재한 최소 60일 (기본) 이후 일정으로 예약 신청 가능합니다."
+  }
+}
