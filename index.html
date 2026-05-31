@@ -406,7 +406,14 @@ section{padding:var(--section-gap) 0;}
 .form-qty-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:10px 14px;border-radius:12px;background:rgba(179,168,240,0.06);border:1px solid rgba(179,168,240,0.14);transition:all .2s;}
 .form-qty-row:hover{background:rgba(179,168,240,0.12);border-color:rgba(179,168,240,0.26);}
 .form-qty-row.active{background:rgba(179,168,240,0.16);border-color:var(--purple-light);}
-.form-qty-label{font-size:12.5px;color:var(--text-secondary);flex:1;line-height:1.4;}
+.form-qty-label {
+  font-size: 12.5px; color: var(--text-secondary); flex: 1; line-height: 1.4;
+  min-width: 0; display: flex; flex-direction: column; gap: 3px;
+}
+
+.qty-name-line {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px;
+}
 
 /* ── 커스텀 스테퍼 ── */
 .qty-stepper{display:flex;align-items:center;gap:0;flex-shrink:0;
@@ -433,8 +440,9 @@ section{padding:var(--section-gap) 0;}
 .qty-badge{
   font-size:10px;font-weight:700;
   background:linear-gradient(135deg,var(--purple-light),var(--purple-dark));
-  color:#fff;border-radius:10px;padding:1px 7px;margin-left:6px;
+  color:#fff;border-radius:10px;padding:1px 7px;
   opacity:0;transform:scale(0.8);transition:all .2s;pointer-events:none;
+  display: inline-block; align-self: flex-start;
 }
 .qty-badge.show{opacity:1;transform:scale(1);}
 
@@ -1097,9 +1105,12 @@ function makeQtySelect(containerId, items, groupKey) {
     const row = document.createElement('div'); row.className = 'form-qty-row';
     row.innerHTML = `
       <div class="form-qty-label">
-        ${item.name}
-        <span class="qty-badge" id="badge-${key}"></span>
-        <span class="price-hint">+${fmt(item.price)}/개</span>
+        <div class="qty-name-line">
+          ${item.name}
+          <span class="price-hint">+${fmt(item.price)}/개</span>
+        </div>
+        <span class="qty-badge"></span>
+        
       </div>
       <div class="qty-stepper">
         <button class="qty-btn qty-minus" disabled>−</button>
@@ -1257,7 +1268,7 @@ function resetForm() {
 
 function submitForm() {
   if (!document.getElementById('f-char-name')?.value) { alert('캐릭터 이름을 입력해주세요.'); return; }
-  alert('예약 신청이 접수되었습니다!\n문의 양식을 작성해 주시면 연락드리겠습니다. 감사합니다 💜');
+  alert('예상 견적 옆의 복사 버튼을 통해 문의 신청해 주세요. 감사합니다 💜');
 }
 
 function initScrollFade() {
