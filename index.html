@@ -122,7 +122,7 @@ section{padding:var(--section-gap) 0;}
 }
 .glass-card:hover{border-color:var(--glass-border-hover);background:var(--glass-bg-hover);box-shadow:var(--shadow-md);}
 
-.hero-top{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+.hero-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-bottom:18px;}
 .artist-intro{font-size:13.5px;line-height:1.85;color:var(--text-secondary);white-space:pre-line;}
 .artist-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
 .tag{
@@ -156,7 +156,7 @@ section{padding:var(--section-gap) 0;}
   100% { background-position: 200% center; }
 }
 
-.hero-bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch;}
+.hero-bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch;}
 .slots-layout{display:flex;flex-direction:column;height:100%;gap:16px;}
 .slots-months-wrap{flex:1;}
 @media(max-width:900px){.hero-bottom{grid-template-columns:1fr;}}
@@ -256,7 +256,7 @@ section{padding:var(--section-gap) 0;}
 .sample-category{display:none;}
 .sample-category.active{display:block;}
 .sample-cat-desc{font-size:13px;color:var(--text-muted);margin-bottom:18px;white-space:pre-line;}
-.sample-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.sample-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
 .sample-item{
   background:var(--glass-bg);border:1px solid var(--glass-border);
   border-radius:14px;overflow:hidden;transition:all .2s;
@@ -275,7 +275,7 @@ section{padding:var(--section-gap) 0;}
 .all-cat-block{margin-bottom:28px;}
 .all-cat-label{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px;padding-left:10px;border-left:3px solid var(--purple-light);}
 
-.collab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.collab-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
 .collab-card{
   background:var(--glass-bg);border:1px solid var(--glass-border);
   border-radius:14px;padding:18px;display:flex;align-items:flex-start;
@@ -292,7 +292,7 @@ section{padding:var(--section-gap) 0;}
 .collab-name{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:5px;}
 .collab-detail{font-size:12px;color:var(--text-muted);line-height:1.6;}
 
-.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.options-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;}
 .plan-name{font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;}
 .plan-price{
   font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;margin-bottom:6px;
@@ -303,11 +303,11 @@ section{padding:var(--section-gap) 0;}
 .plan-desc{font-size:13px;color:var(--text-secondary);line-height:1.7;white-space:pre-line;}
 .included-options-card{grid-column:1/-1;}
 .included-title{font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;}
-.options-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.options-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
 .option-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);}
 .option-dot{width:6px;height:6px;border-radius:50%;background:var(--purple-light);flex-shrink:0;}
 
-.add-options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.add-options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
 .add-option-group{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:14px;padding:18px;box-shadow:var(--shadow-sm);}
 .add-group-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
 .add-group-dot{width:8px;height:8px;border-radius:50%;background:var(--purple-light);}
@@ -332,7 +332,7 @@ section{padding:var(--section-gap) 0;}
 .notice-item.open .notice-body{display:block;}
 .notice-content{font-size:13px;color:var(--text-secondary);line-height:1.9;white-space:pre-line;}
 
-.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.process-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
 .process-step{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:14px;padding:18px;transition:all .2s;box-shadow:var(--shadow-sm);}
 .process-step:hover{border-color:var(--glass-border-hover);background:var(--glass-bg-hover);box-shadow:var(--shadow-md);}
 .process-num{
@@ -350,8 +350,9 @@ section{padding:var(--section-gap) 0;}
 .process-note::before{content:'◆ ';color:var(--purple-light);font-size:9px;}
 
 .form-notice{font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.7;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;}
+
+.form-group{display:flex;flex-direction:column;gap:6px;min-width:0;}
 .form-group.full{grid-column:1/-1;}
 .form-label{font-size:12px;font-weight:600;color:var(--text-secondary);}
 .form-label .required{color:#c98bd6;margin-left:2px;}
@@ -403,7 +404,7 @@ section{padding:var(--section-gap) 0;}
 .form-checkbox-label.checked .form-checkbox-box{background:var(--purple-light);border-color:var(--purple-light);}
 .form-checkbox-label.checked .form-checkbox-box::after{content:'✓';color:#fff;font-size:11px;line-height:1;}
 .form-section-title{font-size:13px;font-weight:600;color:var(--purple-dark);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(179,168,240,0.22);}
-.form-qty-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:10px 14px;border-radius:12px;background:rgba(179,168,240,0.06);border:1px solid rgba(179,168,240,0.14);transition:all .2s;}
+.form-qty-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(179,168,240,0.06);border:1px solid rgba(179,168,240,0.14);transition:all .2s;}
 .form-qty-row:hover{background:rgba(179,168,240,0.12);border-color:rgba(179,168,240,0.26);}
 .form-qty-row.active{background:rgba(179,168,240,0.16);border-color:var(--purple-light);}
 .form-qty-label {
@@ -461,7 +462,7 @@ section{padding:var(--section-gap) 0;}
 }
 .btn-submit:hover{transform:translateY(-1px);box-shadow:0 5px 22px rgba(122,109,212,0.38);}
 
-.form-estimate-wrap{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;}
+.form-estimate-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start;}
 .estimate-sticky{
   position:sticky;top:76px;
   background:rgba(255,255,255,0.78);border:1px solid var(--glass-border);
@@ -567,8 +568,8 @@ section{padding:var(--section-gap) 0;}
       <a class="nav-link" href="#samples">샘플</a>
       <a class="nav-link" href="#pricing">가격</a>
       <a class="nav-link" href="#notices">공지</a>
-      <a class="nav-link" href="#form">신청하기</a>
     </div>
+      
     <div class="nav-actions">
       <button class="btn-secondary" onclick="document.getElementById('showcase').scrollIntoView({behavior:'smooth'})">리깅 샘플 보러가기</button>
       <button class="btn-primary" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">문의 작성하러 가기</button>
@@ -687,7 +688,7 @@ section{padding:var(--section-gap) 0;}
         <div class="estimate-sticky">
           <div class="estimate-head">
             <div class="estimate-title-text">예상 견적</div>
-            <button class="btn-copy" id="btn-copy" onclick="copyEstimate()">복사</button>
+            <!-- <button class="btn-copy" id="btn-copy" onclick="copyEstimate()">복사</button> -->
           </div>
           <div class="estimate-list" id="estimate-list">
             <div class="estimate-empty">항목을 선택하면 견적이 표시됩니다.</div>
@@ -877,7 +878,7 @@ function renderCollabs() {
   const grid = document.getElementById('collab-grid');
   (C.collaborators||[]).forEach(c => {
     const a = document.createElement('a');
-    a.className = 'collab-card'; a.href = c.link||'#';
+    a.className = 'collab-card'; a.href = c.link||'#';a.target = "_blank";a.rel = "noopener noreferrer";
     a.innerHTML = `<div class="collab-avatar">${c.initial}</div>
       <div><div class="collab-name">${c.name}</div><div class="collab-detail">${c.discount}<br>${c.bonus}</div></div>`;
     grid.appendChild(a);
@@ -956,6 +957,11 @@ function renderForm() {
           placeholder="${ff.artistNamePlaceholder||'작가님 이름을 적어주세요.'}"
           oninput="updateInfoField('artistName', this.value, '일러스트 작가님')">
       </div>
+
+      <div class="form-group"><label class="form-label">방송 플랫폼</label><input class="form-input" id="f-platform" placeholder="예: 트위치, 유튜브, 치지직 등" oninput="updateInfoField('platform', this.value, '방송 플랫폼')"></div>
+      <div class="form-group"><label class="form-label">트래킹 장비</label><div class="form-radio-group" id="f-tracking"></div></div>
+
+
       <div class="form-group">
         <label class="form-label">제작 목적 <span class="required">*</span></label>
         <div class="form-radio-group" id="f-purpose"></div>
@@ -972,6 +978,11 @@ function renderForm() {
         <label class="form-label">리깅 옵션 <span class="required">*</span></label>
         <div class="form-radio-group" id="f-plan"></div>
       </div>
+
+      <div class="form-group"><label class="form-label">희망 마감일</label><input class="form-input" type="date" id="f-deadline" oninput="updateInfoField('deadline', this.value, '희망 마감일')"></div>
+      <div class="form-group"><label class="form-label">작업과정 공개</label><div class="form-radio-group" id="f-workpublic"></div></div>
+
+
       <div class="form-group full"><div class="form-section-title">추가 옵션</div></div>
       <div class="form-group"><label class="form-label">옵션 추가</label><div id="f-option-add-wrap"></div></div>
       <div class="form-group"><label class="form-label">표정 및 자세</label><div id="f-expr-wrap"></div></div>
@@ -979,7 +990,11 @@ function renderForm() {
       <div class="form-group"><label class="form-label">파츠 추가</label><div id="f-parts-wrap"></div></div>
       <div class="form-group"><label class="form-label">동물 파츠</label><div id="f-animal-wrap"></div></div>
       <div class="form-group"><label class="form-label">기타</label><div id="f-other-wrap"></div></div>
+      <div class="form-group full"><label class="form-label">협업 작가님</label><div class="form-radio-group" id="f-collabartist"></div></div>
+
       <div class="form-group full"><label class="form-label">할인 적용</label><div id="f-discount-wrap"></div></div>
+
+      
       <div class="form-group full">
         <label class="form-label">추가 문의 사항</label>
         <textarea class="form-textarea" id="f-contact"
@@ -1003,6 +1018,16 @@ function renderForm() {
   /* 레이어 파일 보유 - 선택값을 견적에 태그로 반영 */
   makeRadios('f-layer', ff.layerFileOptions||['YES','NO'],
     (val) => updateRadioField('layer', val, '레이어 파일 보유'));
+
+  makeRadios('f-tracking', ['iOS 트래킹', '웹캠 트래킹'],
+    (val) => updateRadioField('tracking', val, '트래킹 장비'));
+
+  makeRadios('f-workpublic', ['YES', 'NO'],
+    (val) => updateRadioField('workpublic', val, '작업과정 공개'));
+
+  makeRadios('f-collabartist',
+    (C.collaborators||[]).map(c => c.name).concat(['없음']),
+    (val) => updateRadioField('collabartist', val, '협업 작가님'));
 
   const plans = bo.plans||[];
   makeRadios('f-plan', plans.map(p=>p.name), (val,idx) => {
@@ -1268,7 +1293,7 @@ function resetForm() {
 
 function submitForm() {
   if (!document.getElementById('f-char-name')?.value) { alert('캐릭터 이름을 입력해주세요.'); return; }
-  alert('예상 견적 옆의 복사 버튼을 통해 문의 신청해 주세요. 감사합니다 💜');
+  alert('예상 견적을 캡쳐 및 텍스트 복사를 통해 문의 신청해 주세요. 감사합니다 💜');
 }
 
 function initScrollFade() {
