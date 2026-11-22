@@ -44,73 +44,65 @@
       { "month": "9", "status": "open", "label": "OPEN" },
       { "month": "10", "status": "closed", "label": "CLOSED" },
       { "month": "11", "status": "closed", "label": "CLOSED" },
-      { "month": "12", "status": "closed", "label": "CLOSED" }
+      { "month": "12", "status": "open", "label": "OPEN" }
     ]
   },
   "posters": [
     {
-      "no": "NO.1",
-      "image": "images/poster/poster1.png",
-      "name": { "ko": "엔서스", "ja": "エンサス", "en": "Ensus" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
+    "no": "NO.1",
+    "name": { "ko": "빈터", "ja": "ヴィンター", "en": "Vinter" },
+    "image": "images/poster/poster1.png",
+    "forSale": false,
+    "gender": "m"
+    },
+    {
+      "no": "NO.2",
+      "name": { "ko": "박유넬", "ja": "パク・ユネル", "en": "Park Yunel" },
+      "image": "images/poster/poster2.png",
       "forSale": false,
       "gender": "m"
     },
     {
-      "no": "NO.2",
-      "image": "images/poster/poster2.png",
-      "name": { "ko": "협업 모델 샘플", "ja": "コラボモデルサンプル", "en": "Collab Model Sample" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
-      "forSale": false,
-      "gender": "f"
-    },
-    {
       "no": "NO.3",
+      "name": { "ko": "쿠잉", "ja": "クイン", "en": "Kuing" },
       "image": "images/poster/poster3.png",
-      "name": { "ko": "아야린", "ja": "アヤリン", "en": "Ayarin" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
       "forSale": false,
       "gender": "f"
     },
     {
       "no": "NO.4",
+      "name": { "ko": "엔서스", "ja": "エンサス", "en": "Ensus" },
       "image": "images/poster/poster4.png",
-      "name": { "ko": "리아 설", "ja": "リア・ソル", "en": "Ria Seol" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
+      "forSale": false,
+      "gender": "m"
+    },
+    {
+      "no": "NO.5",
+      "name": { "ko": "몽냐", "ja": "モンニャ", "en": "Mongnya" },
+      "image": "images/poster/poster5.png",
       "forSale": false,
       "gender": "f"
     },
     {
-      "no": "NO.5",
-      "image": "images/poster/poster5.png",
-      "name": { "ko": "박유넬", "ja": "パク・ユネル", "en": "Park Yunel" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
-      "forSale": false,
-      "gender": "m"
-    },
-    {
       "no": "NO.6",
+      "name": { "ko": "구공일", "ja": "クゴンイル", "en": "901" },
       "image": "images/poster/poster6.png",
-      "name": { "ko": "빈터", "ja": "ヴィンター", "en": "Vinter" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
       "forSale": false,
-      "gender": "m"
+      "gender": "f"
     },
     {
       "no": "NO.7",
+      "name": { "ko": "샘플", "ja": "サンプル", "en": "Sample" },
       "image": "images/poster/poster7.png",
-      "name": { "ko": "빈터", "ja": "ヴィンター", "en": "Vinter" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
       "forSale": false,
-      "gender": "m"
+      "gender": "f"
     },
     {
       "no": "NO.8",
+      "name": { "ko": "네네", "ja": "ネネ", "en": "Nene" },
       "image": "images/poster/poster8.png",
-      "name": { "ko": "빈터", "ja": "ヴィンター", "en": "Vinter" },
-      "desc": { "ko": "포스터 샘플입니다.", "ja": "ポスターサンプルです。", "en": "Poster sample." },
       "forSale": false,
-      "gender": "m"
+      "gender": "f"
     }
   ],
   "videos": [
@@ -123,12 +115,12 @@
   ],
   "samples": {
     "expressions": [
-      { "no": "No.1", "image": "images/face/face1.png", "name": { "ko": "눈물 표정", "ja": "涙表情", "en": "Tears Expression" } },
+      { "no": "No.1", "image": "images/face/face1.png", "name": { "ko": "헤롱 표정", "ja": "ぐるぐる目", "en": "Dizzy Expression" } },
       { "no": "No.2", "image": "images/face/face2.png", "name": { "ko": "죽은 눈 표정", "ja": "ジト目・ハイライトオフ", "en": "Deadpan Eyes" } },
-      { "no": "No.3", "image": "images/face/face3.png", "name": { "ko": "홍조 표정", "ja": "照れ・赤面", "en": "Blushing Expression" } },
-      { "no": "No.4", "image": "images/face/face4.png", "name": { "ko": "헤롱 표정", "ja": "ぐるぐる目", "en": "Dizzy Expression" } },
-      { "no": "No.5", "image": "images/face/face5.png", "name": { "ko": "헤롱 표정", "ja": "ぐるぐる目 2", "en": "Dizzy Expression 2" } },
-      { "no": "No.6", "image": "images/face/face6.png", "name": { "ko": "헤롱 표정", "ja": "ぐるぐる目 3", "en": "Dizzy Expression 3" } }
+      { "no": "No.3", "image": "images/face/face3.png", "name": { "ko": "질색 표정", "ja": "嫌悪の表情", "en": "Disgusting expression" } },
+      { "no": "No.4", "image": "images/face/face4.png", "name": { "ko": "띠용 표정", "ja": "ぽかんとした表情", "en": "Surprise expression" } },
+      { "no": "No.5", "image": "images/face/face5.png", "name": { "ko": "반짝 표정", "ja": "キラキラした表情", "en": "Sparkling expression" } },
+      { "no": "No.6", "image": "images/face/face6.png", "name": { "ko": "피식 표정", "ja": "くすりとした表情", "en": "Smirking expression" } }
     ],
     "designs": [
       {
