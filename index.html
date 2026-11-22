@@ -883,6 +883,27 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function br(s) { return esc(s).replace(/\n/g, '<br>'); }
   function won(n) { n = Number(n || 0); return (n < 0 ? '-₩' : '₩') + Math.abs(n).toLocaleString('ko-KR'); }
+
+  /* ---------- 통합 가격 포맷터 (price 숫자 -> 화면 표시 문자열 자동 생성) ---------- */
+  function formatPrice(item, opts) {
+    opts = opts || {};
+    if (!item) return '';
+    if (item.priceText) return item.priceText;
+    var p = Number(item.price || 0);
+    var suffix = item.priceSuffix || '';
+    if (opts.hideZero && p === 0 && !suffix) return '';
+    var txt = won(p) + suffix;
+    return opts.bracket ? '[' + txt + ']' : txt;
+  }
+
+  /* ---------- 만원 단위 표기 (저작권 표 / 협업작가 카드용) ---------- */
+  function formatManwon(n) {
+    n = Math.abs(Number(n || 0));
+    if (LANG === 'ko') return (n >= 10000 && n % 10000 === 0 ? (n / 10000) + '만원' : n.toLocaleString('ko-KR') + '원');
+    if (LANG === 'ja') return (n >= 10000 && n % 10000 === 0 ? (n / 10000) + '万ウォン' : n.toLocaleString('ja-JP') + 'ウォン');
+    return won(n);
+  }
+
   function setText(sel, v) { $$(sel).forEach(function (el) { if (v) el.textContent = v; }); }
   function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -931,7 +952,7 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
   });
 
   /* =========================================================
-     [수정 1, 2, 4] 갤러리 라이트박스 뷰어 (포스터 / 표정 / 디자인 공용)
+     갤러리 라이트박스 뷰어 (포스터 / 표정 / 디자인 / 판매모델)
      ========================================================= */
   var lbState = { items: [], index: 0, open: false };
 
@@ -1059,7 +1080,9 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
   function renderCollabs(list) {
     var cg = $('#collabGrid');
     cg.innerHTML = (list || []).map(function (c) {
-      var name = L(c.name), desc = L(c.desc);
+      var name = L(c.name);
+      var discAbs = formatManwon(c.discount);
+      var desc = L(c.desc).replace(/\{discount_abs\}/g, discAbs).replace(/\{discount\}/g, won(c.discount));
       return '<div class="ct" tabindex="0" role="button" aria-expanded="false"><div class="ct__img"><img src="' + esc(c.img) + '" alt="' + esc(name) + '" loading="lazy">' +
         '<div class="ct__info"><p>' + br(desc) + '</p><a href="' + esc(c.link) + '" target="_blank" rel="noopener">' + esc(T('collab_link')) + '</a></div></div>' +
         '<div class="ct__name">' + esc(name) + '</div></div>';
@@ -1097,7 +1120,6 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
     $('#slotCal').innerHTML = html;
     var txt = open.length ? ranges(open) : '';
     $('#slotNow').innerHTML = open.length ? T('slot_avail_tpl').replace('{r}', txt) : T('slot_full');
-    // $('#slotNote').innerHTML = L(d.slotNotice) ? '<div class="slot__note">' + br(L(d.slotNotice)) + '</div>' : '';
   }
 
   /* ---------- 포스터 ---------- */
@@ -1121,7 +1143,7 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
     if (DATA) renderPosters(DATA.posters);
   });
 
-  /* ---------- 표정 · 디자인 샘플 (갤러리 뷰어 연동) ---------- */
+  /* ---------- 표정 · 디자인 샘플 ---------- */
   function renderSamples(s) {
     s = s || {};
     $('#faceGrid').innerHTML = (s.expressions || []).map(function (it, i) {
@@ -1177,47 +1199,72 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
       var imgHtml = (up || !it.image)
         ? '<div class="sc__soon" aria-hidden="true"></div>'
         : '<img src="' + esc(it.image) + '" alt="' + esc(name) + '" loading="lazy" data-gallery="sale" data-idx="' + (saleIdx++) + '">';
+      var priceStr = (typeof it.price === 'number' && it.price > 0) ? formatPrice(it) : (typeof it.price === 'string' ? it.price : '');
       return '<article class="sc"><div class="sc__img">' + b + imgHtml +
-        '</div><div class="sc__meta"><div class="sc__no">' + esc(String(it.no).replace('NO.', 'No.')) + '</div><div class="sc__name">' + esc(name) + '</div><div class="sc__desc">' + esc(L(it.desc)) + '</div>' + (it.price ? '<div class="sc__price">' + esc(it.price) + '</div>' : '') + '</div></article>';
+        '</div><div class="sc__meta"><div class="sc__no">' + esc(String(it.no).replace('NO.', 'No.')) + '</div><div class="sc__name">' + esc(name) + '</div><div class="sc__desc">' + esc(L(it.desc)) + '</div>' + (priceStr ? '<div class="sc__price">' + esc(priceStr) + '</div>' : '') + '</div></article>';
     }).join('');
   }
 
-  /* ---------- 이벤트 ---------- */
+  /* ---------- 이벤트 (숫자 기반 자동 계산) ---------- */
   function renderEvent(d) {
     if (!d) return;
     setText('[data-t="event"]', L(d.title));
     var open = d.visibility === 'open';
+    var oldP = Number(d.oldPrice || 0);
+    var discP = Number(d.discount || 0);
+    var finalP = d.finalPrice != null ? Number(d.finalPrice) : (oldP + discP);
     var guides = A(d.guides).map(function (g, i) { return (i + 1) + '. ' + esc(g); }).join('<br>');
     $('#eventBox').innerHTML =
       '<div class="card ev__card' + (open ? '' : ' is-closed') + '"><div class="tartan" aria-hidden="true"></div><div class="ev__body">' +
         '<div class="ev__top"><b>' + esc(L(d.cardLabel) || 'Event') + '</b>' + (L(d.status) ? '<span>' + esc(L(d.status)) + '</span>' : '') + '</div>' +
         '<div class="ev__row"><b>' + esc(T('ev_type')) + '</b><span>' + esc(L(d.type)) + '</span></div>' +
         '<div class="ev__row"><b>' + esc(T('ev_period')) + '</b><span>' + esc(L(d.period)) + '</span></div>' +
-        '<div class="ev__row"><b>' + esc(T('ev_content')) + '</b><div class="ev__price"><div><s>' + esc(d.oldPrice) + '</s><em>' + esc(d.discount) + '</em></div><strong>' + esc(d.finalPrice) + '</strong></div></div>' +
+        '<div class="ev__row"><b>' + esc(T('ev_content')) + '</b><div class="ev__price"><div><s>' + esc(won(oldP)) + '</s><em>' + esc(won(discP)) + '</em></div><strong>' + esc(won(finalP)) + '</strong></div></div>' +
         '<div class="ev__row"><b>' + esc(T('ev_guide')) + '</b><span>' + guides + '</span></div>' +
       '</div>' + (open ? '' : '<div class="ev__closed"><div><small>Event closed</small><p>' + esc(T('ev_closed')) + '</p></div></div>') + '</div>' +
       '<div class="card nb"><div class="nb__hd"><b><i>Notice</i>' + esc(L(d.sideTitle)) + '</b>' + (L(d.sideStatus) ? '<span>' + esc(L(d.sideStatus)) + '</span>' : '') + '</div><ul>' +
         A(d.sideNotices).map(function (n, i) { return '<li><em>' + esc(T('ev_note_idx')) + (i + 1) + '</em><span>' + esc(n) + '</span></li>'; }).join('') + '</ul></div>';
   }
 
-  /* ---------- 공지사항 ---------- */
-  function renderNotice(d) {
+  /* ---------- 공지사항 (저작권/비공개 옵션 가격 자동 연동) ---------- */
+  function getOptionPriceByKey(fieldOpts, key) {
+    var found = (fieldOpts || []).find(function (o) { return o.key === key; });
+    return found ? Number(found.price || 0) : 0;
+  }
+
+  function formatLicenseCell(price) {
+    return formatManwon(price) + ' (+10%)';
+  }
+
+  function renderNotice(d, apply) {
     if (!d) return;
     setText('[data-t="notice"]', L(d.title));
     var secs = d.sections || [];
+    var copyOpts = (apply && apply.fields && apply.fields.copyrightBuy && apply.fields.copyrightBuy.options) || [];
+    var privOpts = (apply && apply.fields && apply.fields.privateUse && apply.fields.privateUse.options) || [];
+    var priv1MonthPrice = getOptionPriceByKey(privOpts, 'priv_1month');
+
     $('#noticeNav').innerHTML = secs.map(function (s, i) { return '<button type="button" role="tab" data-tab="n' + i + '" aria-selected="' + (i === 0) + '"><i>' + pad(i + 1) + '</i>' + esc(L(s.title)) + '</button>'; }).join('');
     $('#noticeBody').innerHTML = secs.map(function (s, i) {
       var head = '<h4><i>' + pad(i + 1) + '</i>' + esc(L(s.title)) + '</h4>', body = '';
       if (s.type === 'license' && s.table) {
         var t = s.table;
+        var pLeft = t.priceLeftKey ? formatLicenseCell(getOptionPriceByKey(copyOpts, t.priceLeftKey)) : L(t.priceLeft);
+        var pLeftSub = t.priceLeftSubKey ? formatLicenseCell(getOptionPriceByKey(copyOpts, t.priceLeftSubKey)) : L(t.priceLeftSub);
+        var pRight = t.priceRightKey ? formatLicenseCell(getOptionPriceByKey(copyOpts, t.priceRightKey)) : L(t.priceRight);
+        var pRightSub = t.priceRightSubKey ? formatLicenseCell(getOptionPriceByKey(copyOpts, t.priceRightSubKey)) : L(t.priceRightSub);
+
         body = A(s.paragraphs).map(function (p) { return '<p>' + br(p) + '</p>'; }).join('') +
           '<div class="cp-wrap"><table class="cp"><thead><tr><th colspan="2">' + esc(L(t.header1Left)) + '</th><th colspan="2">' + esc(L(t.header1Right)) + '</th></tr>' +
           '<tr><th>' + esc(L(t.header2Left)) + '</th><th>' + esc(L(t.header2LeftSub)) + '</th><th>' + esc(L(t.header2Right)) + '</th><th>' + esc(L(t.header2RightSub)) + '</th></tr></thead><tbody>' +
-          '<tr><td><strong>' + esc(L(t.priceLeft)) + '</strong></td><td><strong>' + esc(L(t.priceLeftSub)) + '</strong></td><td><strong>' + esc(L(t.priceRight)) + '</strong></td><td><strong>' + esc(L(t.priceRightSub)) + '</strong></td></tr>' +
+          '<tr><td><strong>' + esc(pLeft) + '</strong></td><td><strong>' + esc(pLeftSub) + '</strong></td><td><strong>' + esc(pRight) + '</strong></td><td><strong>' + esc(pRightSub) + '</strong></td></tr>' +
           '<tr><td colspan="2">' + br(L(t.descLeft)) + '</td><td colspan="2">' + br(L(t.descRight)) + '</td></tr></tbody></table></div>' +
           (A(s.notes).length ? '<p class="cp-note">' + A(s.notes).map(esc).join('<br>') + '</p>' : '');
       } else {
-        body = A(s.items).map(function (it) { return '<p' + (/^[※*]/.test(it) ? ' class="is-note"' : '') + '>' + br(it) + '</p>'; }).join('');
+        body = A(s.items).map(function (it) {
+          var txt = it.replace(/\{priv_1month\}/g, won(priv1MonthPrice));
+          return '<p' + (/^[※*]/.test(txt) ? ' class="is-note"' : '') + '>' + br(txt) + '</p>';
+        }).join('');
       }
       return '<div class="card nt__panel' + (i === 0 ? ' is-on' : '') + '" data-panel="n' + i + '">' + head + body + '</div>';
     }).join('');
@@ -1235,7 +1282,7 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
       '</div><ul>' + det.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
   }
 
-  /* ---------- 가격 + 추가 옵션 접기/펼치기 ---------- */
+  /* ---------- 가격 + 추가 옵션 (apply.addonOptions와 단일 소스 공유) ---------- */
   var HIDE_IN_PRICE = ['이벤트 · 할인', 'イベント・割引', 'Events & Discounts'];
   function groupBy(list) {
     var order = [], map = {};
@@ -1254,16 +1301,18 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
       return '<article class="plan' + (hot ? ' plan--hot' : '') + '">' + (hot ? '<div class="tartan" aria-hidden="true"></div>' : '') +
         '<span class="plan__tag">' + (hot ? 'EVENT' : esc(T('base_tag'))) + '</span><h3>' + esc(L(o.title)) + '</h3>' +
         (tags.length ? '<ul>' + tags.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') +
-        '<div class="plan__price">' + esc(o.priceText || won(o.price)) + '</div></article>';
+        '<div class="plan__price">' + esc(formatPrice(o)) + '</div></article>';
     }).join('');
     if (!menu) return;
     setText('[data-t="menu"]', L(menu.title));
     $('#menuSub').textContent = L(menu.subtitle);
-    $('#menuBox').innerHTML = groupBy(menu.items).filter(function (g) { return HIDE_IN_PRICE.indexOf(g.name) < 0; }).map(function (g) {
+
+    var addonList = (apply && apply.addonOptions) || (menu && menu.items) || [];
+    $('#menuBox').innerHTML = groupBy(addonList).filter(function (g) { return HIDE_IN_PRICE.indexOf(g.name) < 0; }).map(function (g) {
       return '<div class="grp"><div class="grp__hd"><b>' + esc(g.name) + '</b><span>' + g.items.length + ' items</span></div>' +
         g.items.map(function (it) {
           var det = A(it.details).join(' · ');
-          return '<div class="gi"><div class="gi__line"><b>' + esc(L(it.title)) + '</b><span>' + esc(it.priceText) + '</span></div>' + (det ? '<p>' + esc(det) + '</p>' : '') + '</div>';
+          return '<div class="gi"><div class="gi__line"><b>' + esc(L(it.title)) + '</b><span>' + esc(formatPrice(it)) + '</span></div>' + (det ? '<p>' + esc(det) + '</p>' : '') + '</div>';
         }).join('') + '</div>';
     }).join('');
   }
@@ -1280,9 +1329,23 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
     btn.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   })();
 
-  /* ---------- 신청 양식 ---------- */
+  /* ---------- 신청 양식 (collabs 자동 연동 & 가격 자동 포맷) ---------- */
   var AP = null, applyBound = false;
   var st = { base: -1, biz: -1, face: {}, addon: {}, addonOpen: true, form: { nickname: '', platform: '', debutDate: '', appearance: '', etc: '', collab: '-1', copy: '-1', priv: '-1' } };
+
+  function buildCollabOptions(d, collabs) {
+    var f = (d && d.fields && d.fields.collabArtist) || {};
+    if (f.options && f.options.length) return f.options;
+    var list = (collabs || []).map(function (c) {
+      return {
+        title: c.applyTitle || c.name,
+        price: Number(c.discount || 0),
+        outputLabel: c.outputLabel || L(c.applyTitle || c.name)
+      };
+    });
+    if (f.noneOption) list.push(f.noneOption);
+    return list;
+  }
 
   function saveFormState() {
     if (!$('#nickname')) return;
@@ -1296,19 +1359,23 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
     st.form.priv = $('#privateUse').value;
   }
 
-  function sel(id, field, curVal) {
-    if (!field) return '';
+  function sel(id, options, curVal) {
     return '<select class="inp" id="' + id + '"><option value="-1">' + esc(T('ap_sel_ph')) + '</option>' +
-      (field.options || []).map(function (o, i) {
+      (options || []).map(function (o, i) {
         var s = String(i) === String(curVal) ? ' selected' : '';
-        return '<option value="' + i + '"' + s + '>' + esc(L(o.title)) + (o.priceText ? ' ' + esc(o.priceText) : '') + '</option>';
+        var pStr = formatPrice(o, { hideZero: true, bracket: true });
+        return '<option value="' + i + '"' + s + '>' + esc(L(o.title)) + (pStr ? ' ' + esc(pStr) : '') + '</option>';
       }).join('') + '</select>';
   }
 
-  function renderApply(d) {
+  function renderApply(d, collabs) {
     if (!d) return;
     saveFormState();
-    AP = d; var f = d.fields || {};
+    AP = d;
+    var f = d.fields || {};
+    var collabOpts = buildCollabOptions(d, collabs);
+    AP._collabOpts = collabOpts;
+
     setText('[data-t="apply"]', L(d.title));
     if (L(d.subtitle)) $('#applySub').textContent = L(d.subtitle);
     var biz = (f.businessType && f.businessType.options) || [];
@@ -1319,14 +1386,14 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
           '<div class="fd"><label for="nickname">' + esc(T('ap_nick')) + '</label><input class="inp" id="nickname" value="' + esc(st.form.nickname) + '" placeholder="' + esc(T('ap_nick_ph')) + '"></div>' +
           '<div class="fd"><label for="platform">' + esc(T('ap_plat')) + '</label><input class="inp" id="platform" value="' + esc(st.form.platform) + '" placeholder="' + esc(T('ap_plat_ph')) + '"></div>' +
           '<div class="fd"><label for="debutDate">' + esc(T('ap_debut')) + '</label><input class="inp" id="debutDate" value="' + esc(st.form.debutDate) + '" placeholder="' + esc(T('ap_debut_ph')) + '"></div>' +
-          '<div class="fd"><label for="collabArtist">' + esc(T('ap_collab')) + '</label>' + sel('collabArtist', f.collabArtist, st.form.collab) + '</div>' +
+          '<div class="fd"><label for="collabArtist">' + esc(T('ap_collab')) + '</label>' + sel('collabArtist', collabOpts, st.form.collab) + '</div>' +
           (biz.length ? '<div class="fd full"><span>' + esc(T('ap_biz')) + '</span><div class="chips" id="bizChips">' + biz.map(function (o, i) { return '<button type="button" data-biz="' + i + '" aria-pressed="' + (st.biz === i) + '">' + esc(L(o.title)) + '</button>'; }).join('') + '</div></div>' : '') +
           '<div class="fd full"><label for="appearance">' + esc(T('ap_look')) + '</label><textarea class="inp" id="appearance" placeholder="' + esc(T('ap_look_ph')) + '">' + esc(st.form.appearance) + '</textarea></div>' +
-          '<div class="fd"><label for="copyrightBuy">' + esc(T('ap_copy')) + '</label>' + sel('copyrightBuy', f.copyrightBuy, st.form.copy) + '</div>' +
-          '<div class="fd"><label for="privateUse">' + esc(T('ap_priv')) + '</label>' + sel('privateUse', f.privateUse, st.form.priv) + '</div>' +
+          '<div class="fd"><label for="copyrightBuy">' + esc(T('ap_copy')) + '</label>' + sel('copyrightBuy', f.copyrightBuy && f.copyrightBuy.options, st.form.copy) + '</div>' +
+          '<div class="fd"><label for="privateUse">' + esc(T('ap_priv')) + '</label>' + sel('privateUse', f.privateUse && f.privateUse.options, st.form.priv) + '</div>' +
         '</div></div>' +
         '<div class="card ob"><div class="ob__ttl"><i>02</i>' + esc(T('ap_02')) + ' <small>' + esc(T('ap_req')) + '</small></div><div class="bases">' +
-          (d.baseOptions || []).map(function (o, i) { return '<button type="button" class="bc" data-base="' + i + '" aria-pressed="' + (st.base === i) + '"><b>' + esc(L(o.title)) + '</b>' + (L(o.description) ? '<p>' + esc(L(o.description)) + '</p>' : '') + '<strong>' + esc(o.priceText || won(o.price)) + '</strong></button>'; }).join('') +
+          (d.baseOptions || []).map(function (o, i) { return '<button type="button" class="bc" data-base="' + i + '" aria-pressed="' + (st.base === i) + '"><b>' + esc(L(o.title)) + '</b>' + (L(o.description) ? '<p>' + esc(L(o.description)) + '</p>' : '') + '<strong>' + esc(formatPrice(o)) + '</strong></button>'; }).join('') +
         '</div></div>' +
         ((d.faceOptions || []).length ? '<div class="card ob"><div class="ob__ttl"><i>03</i>' + esc(T('ap_03')) + '</div><p class="ob__hint">' + esc(T('ap_03_h')) + '</p><div class="fchips">' +
           d.faceOptions.map(function (o, i) { return '<label class="fchip"><input type="checkbox" data-face="' + i + '"' + (st.face[i] ? ' checked' : '') + '><span>' + esc(L(o.title)) + (Number(o.price) ? ' ' + won(o.price) : '') + '</span></label>'; }).join('') + '</div></div>' : '') +
@@ -1337,7 +1404,7 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
           '</div>' +
           '<div class="addon-body' + (st.addonOpen ? '' : ' is-collapsed') + '" id="applyAddonBody"><p class="ob__hint">' + esc(T('ap_04_h')) + '</p>' +
           groupBy(addIdx).map(function (g) {
-            return '<div class="agrp"><p>' + esc(g.name) + '</p><div class="ckg">' + g.items.map(function (o) { return '<label class="ck"><input type="checkbox" data-addon="' + o._i + '"' + (st.addon[o._i] ? ' checked' : '') + '><span>' + esc(L(o.title)) + '</span><em>' + esc(o.priceText || won(o.price)) + '</em></label>'; }).join('') + '</div></div>';
+            return '<div class="agrp"><p>' + esc(g.name) + '</p><div class="ckg">' + g.items.map(function (o) { return '<label class="ck"><input type="checkbox" data-addon="' + o._i + '"' + (st.addon[o._i] ? ' checked' : '') + '><span>' + esc(L(o.title)) + '</span><em>' + esc(formatPrice(o, { hideZero: true })) + '</em></label>'; }).join('') + '</div></div>';
           }).join('') + '</div></div>' : '') +
         '<div class="card ob"><div class="ob__ttl"><i>05</i>' + esc(T('ap_05')) + '</div><div class="fd"><textarea class="inp" id="etc" placeholder="' + esc(T('ap_05_ph')) + '" aria-label="' + esc(T('ap_05')) + '">' + esc(st.form.etc) + '</textarea></div></div>' +
       '</div>' +
@@ -1352,8 +1419,8 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
     update();
   }
 
-  function opt(id, field) {
-    var el = $('#' + id), i = el ? Number(el.value) : -1, o = field && field.options && field.options[i];
+  function opt(id, options) {
+    var el = $('#' + id), i = el ? Number(el.value) : -1, o = options && options[i];
     return o ? { label: L(o.outputLabel) || L(o.title), title: L(o.title), price: Number(o.price) || 0 } : null;
   }
   function val(id, fb) { var el = $('#' + id); return (el && el.value.trim()) || fb; }
@@ -1362,7 +1429,7 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
     var f = AP.fields || {}, rows = [], total = 0;
     var base = st.base > -1 ? AP.baseOptions[st.base] : null;
     if (base) rows.push({ k: T('ap_02'), n: L(base.title), p: Number(base.price) || 0 });
-    var ca = opt('collabArtist', f.collabArtist), cr = opt('copyrightBuy', f.copyrightBuy), pv = opt('privateUse', f.privateUse);
+    var ca = opt('collabArtist', AP._collabOpts), cr = opt('copyrightBuy', f.copyrightBuy && f.copyrightBuy.options), pv = opt('privateUse', f.privateUse && f.privateUse.options);
     if (ca && ca.price) rows.push({ k: T('ap_collab'), n: ca.title, p: ca.price });
     if (cr && cr.price) rows.push({ k: T('ap_copy'), n: cr.title, p: cr.price });
     if (pv && pv.price) rows.push({ k: T('ap_priv'), n: pv.title, p: pv.price });
@@ -1442,11 +1509,11 @@ select.inp { appearance: none; -webkit-appearance: none; padding-right: 44px; cu
       function () { renderSale(DATA.saleModels); },
       function () { renderSamples(DATA.samples); },
       function () { renderEvent(DATA.event); },
-      function () { renderNotice(DATA.notice); },
+      function () { renderNotice(DATA.notice, DATA.apply); },
       function () { renderProcess(DATA.process); },
       function () { renderCollabs(DATA.collabs); },
       function () { renderPrice(DATA.menu, DATA.apply); },
-      function () { renderApply(DATA.apply); }
+      function () { renderApply(DATA.apply, DATA.collabs); }
     ].forEach(function (fn) { try { fn(); } catch (e) { console.error(e); } });
   }
 
